@@ -16,6 +16,8 @@ import { Route as InactiveRouteImport } from './routes/inactive'
 import { Route as SetupRouteImport } from './routes/setup'
 import { Route as AuthenticatedDashboardRouteRouteImport } from './routes/_authenticated/dashboard/route'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
+import { Route as AuthenticatedDashboardMembersRouteImport } from './routes/_authenticated/dashboard/members'
+import { Route as AuthenticatedDashboardVisitationRouteImport } from './routes/_authenticated/dashboard/visitation'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -53,6 +55,18 @@ const AuthenticatedDashboardIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedDashboardRouteRoute,
   } as any)
+const AuthenticatedDashboardMembersRoute =
+  AuthenticatedDashboardMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
+const AuthenticatedDashboardVisitationRoute =
+  AuthenticatedDashboardVisitationRouteImport.update({
+    id: '/visitation',
+    path: '/visitation',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -60,6 +74,8 @@ export interface FileRoutesByFullPath {
   '/inactive': typeof InactiveRoute
   '/setup': typeof SetupRoute
   '/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
+  '/dashboard/members': typeof AuthenticatedDashboardMembersRoute
+  '/dashboard/visitation': typeof AuthenticatedDashboardVisitationRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesByTo {
@@ -67,6 +83,8 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/inactive': typeof InactiveRoute
   '/setup': typeof SetupRoute
+  '/dashboard/members': typeof AuthenticatedDashboardMembersRoute
+  '/dashboard/visitation': typeof AuthenticatedDashboardVisitationRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesById {
@@ -77,14 +95,30 @@ export interface FileRoutesById {
   '/inactive': typeof InactiveRoute
   '/setup': typeof SetupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
+  '/_authenticated/dashboard/members': typeof AuthenticatedDashboardMembersRoute
+  '/_authenticated/dashboard/visitation': typeof AuthenticatedDashboardVisitationRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/inactive' | '/setup' | '/dashboard' | '/dashboard/'
+    | '/'
+    | '/auth'
+    | '/inactive'
+    | '/setup'
+    | '/dashboard'
+    | '/dashboard/members'
+    | '/dashboard/visitation'
+    | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/inactive' | '/setup' | '/dashboard'
+  to:
+    | '/'
+    | '/auth'
+    | '/inactive'
+    | '/setup'
+    | '/dashboard/members'
+    | '/dashboard/visitation'
+    | '/dashboard'
   id:
     | '__root__'
     | '/'
@@ -93,6 +127,8 @@ export interface FileRouteTypes {
     | '/inactive'
     | '/setup'
     | '/_authenticated/dashboard'
+    | '/_authenticated/dashboard/members'
+    | '/_authenticated/dashboard/visitation'
     | '/_authenticated/dashboard/'
   fileRoutesById: FileRoutesById
 }
@@ -155,15 +191,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardRouteRoute
     }
+    '/_authenticated/dashboard/members': {
+      id: '/_authenticated/dashboard/members'
+      path: '/members'
+      fullPath: '/dashboard/members'
+      preLoaderRoute: typeof AuthenticatedDashboardMembersRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
+    '/_authenticated/dashboard/visitation': {
+      id: '/_authenticated/dashboard/visitation'
+      path: '/visitation'
+      fullPath: '/dashboard/visitation'
+      preLoaderRoute: typeof AuthenticatedDashboardVisitationRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
   }
 }
 
 interface AuthenticatedDashboardRouteRouteChildren {
+  AuthenticatedDashboardMembersRoute: typeof AuthenticatedDashboardMembersRoute
+  AuthenticatedDashboardVisitationRoute: typeof AuthenticatedDashboardVisitationRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
 
 const AuthenticatedDashboardRouteRouteChildren: AuthenticatedDashboardRouteRouteChildren =
   {
+    AuthenticatedDashboardMembersRoute: AuthenticatedDashboardMembersRoute,
+    AuthenticatedDashboardVisitationRoute:
+      AuthenticatedDashboardVisitationRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   }
 
