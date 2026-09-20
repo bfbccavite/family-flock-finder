@@ -14,16 +14,284 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      church_settings: {
+        Row: {
+          abbreviation: string
+          address: string
+          church_name: string
+          default_service: string | null
+          id: number
+          logo_url: string | null
+          timezone: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          abbreviation?: string
+          address?: string
+          church_name?: string
+          default_service?: string | null
+          id?: number
+          logo_url?: string | null
+          timezone?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          abbreviation?: string
+          address?: string
+          church_name?: string
+          default_service?: string | null
+          id?: number
+          logo_url?: string | null
+          timezone?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      families: {
+        Row: {
+          created_at: string
+          family_name: string
+          id: string
+          notes: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          family_name: string
+          id?: string
+          notes?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          family_name?: string
+          id?: string
+          notes?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      members: {
+        Row: {
+          address: string | null
+          baptism_date: string | null
+          birth_date: string | null
+          civil_status: string | null
+          created_at: string
+          created_by: string | null
+          date_joined: string | null
+          email: string | null
+          family_id: string | null
+          family_role: string | null
+          first_name: string
+          gender: string | null
+          id: string
+          last_name: string
+          membership_status: string
+          middle_name: string | null
+          ministry: string | null
+          notes: string | null
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          baptism_date?: string | null
+          birth_date?: string | null
+          civil_status?: string | null
+          created_at?: string
+          created_by?: string | null
+          date_joined?: string | null
+          email?: string | null
+          family_id?: string | null
+          family_role?: string | null
+          first_name: string
+          gender?: string | null
+          id?: string
+          last_name: string
+          membership_status?: string
+          middle_name?: string | null
+          ministry?: string | null
+          notes?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          baptism_date?: string | null
+          birth_date?: string | null
+          civil_status?: string | null
+          created_at?: string
+          created_by?: string | null
+          date_joined?: string | null
+          email?: string | null
+          family_id?: string | null
+          family_role?: string | null
+          first_name?: string
+          gender?: string | null
+          id?: string
+          last_name?: string
+          membership_status?: string
+          middle_name?: string | null
+          ministry?: string | null
+          notes?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "members_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          active: boolean
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          last_login_at: string | null
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          email?: string
+          full_name?: string
+          id: string
+          last_login_at?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          last_login_at?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      visitations: {
+        Row: {
+          created_at: string
+          follow_up_date: string | null
+          id: string
+          member_id: string
+          notes: string | null
+          outcome: string | null
+          prayer_requests: string | null
+          recorded_by: string | null
+          status: string
+          updated_at: string
+          visit_date: string
+          visit_type: string
+          visited_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          follow_up_date?: string | null
+          id?: string
+          member_id: string
+          notes?: string | null
+          outcome?: string | null
+          prayer_requests?: string | null
+          recorded_by?: string | null
+          status?: string
+          updated_at?: string
+          visit_date?: string
+          visit_type?: string
+          visited_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          follow_up_date?: string | null
+          id?: string
+          member_id?: string
+          notes?: string | null
+          outcome?: string | null
+          prayer_requests?: string | null
+          recorded_by?: string | null
+          status?: string
+          updated_at?: string
+          visit_date?: string
+          visit_type?: string
+          visited_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visitations_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_capability: {
+        Args: { _capability: string; _user_id: string }
+        Returns: boolean
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_active_staff: { Args: { _user_id: string }; Returns: boolean }
+      role_capabilities: {
+        Args: { _role: Database["public"]["Enums"]["app_role"] }
+        Returns: string[]
+      }
+      touch_last_login: { Args: never; Returns: undefined }
     }
     Enums: {
-      [_ in never]: never
+      app_role:
+        | "super_admin"
+        | "secretary"
+        | "assistant_secretary"
+        | "ushering"
+        | "visitation"
+        | "pastor_elder"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +418,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: [
+        "super_admin",
+        "secretary",
+        "assistant_secretary",
+        "ushering",
+        "visitation",
+        "pastor_elder",
+      ],
+    },
   },
 } as const

@@ -10,33 +10,173 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as InactiveRouteImport } from './routes/inactive'
+import { Route as SetupRouteImport } from './routes/setup'
+import { Route as AuthenticatedDashboardRouteRouteImport } from './routes/_authenticated/dashboard/route'
+import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
+import { Route as AuthenticatedDashboardMembersRouteImport } from './routes/_authenticated/dashboard/members'
+import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard/profile'
+import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard/settings'
+import { Route as AuthenticatedDashboardUsersRouteImport } from './routes/_authenticated/dashboard/users'
+import { Route as AuthenticatedDashboardVisitationRouteImport } from './routes/_authenticated/dashboard/visitation'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InactiveRoute = InactiveRouteImport.update({
+  id: '/inactive',
+  path: '/inactive',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SetupRoute = SetupRouteImport.update({
+  id: '/setup',
+  path: '/setup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedDashboardRouteRoute =
+  AuthenticatedDashboardRouteRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDashboardIndexRoute =
+  AuthenticatedDashboardIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
+const AuthenticatedDashboardMembersRoute =
+  AuthenticatedDashboardMembersRouteImport.update({
+    id: '/members',
+    path: '/members',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
+const AuthenticatedDashboardProfileRoute =
+  AuthenticatedDashboardProfileRouteImport.update({
+    id: '/profile',
+    path: '/profile',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
+const AuthenticatedDashboardSettingsRoute =
+  AuthenticatedDashboardSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
+const AuthenticatedDashboardUsersRoute =
+  AuthenticatedDashboardUsersRouteImport.update({
+    id: '/users',
+    path: '/users',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
+const AuthenticatedDashboardVisitationRoute =
+  AuthenticatedDashboardVisitationRouteImport.update({
+    id: '/visitation',
+    path: '/visitation',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/inactive': typeof InactiveRoute
+  '/setup': typeof SetupRoute
+  '/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
+  '/dashboard/members': typeof AuthenticatedDashboardMembersRoute
+  '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
+  '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/users': typeof AuthenticatedDashboardUsersRoute
+  '/dashboard/visitation': typeof AuthenticatedDashboardVisitationRoute
+  '/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/inactive': typeof InactiveRoute
+  '/setup': typeof SetupRoute
+  '/dashboard/members': typeof AuthenticatedDashboardMembersRoute
+  '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
+  '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/dashboard/users': typeof AuthenticatedDashboardUsersRoute
+  '/dashboard/visitation': typeof AuthenticatedDashboardVisitationRoute
+  '/dashboard': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/inactive': typeof InactiveRoute
+  '/setup': typeof SetupRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
+  '/_authenticated/dashboard/members': typeof AuthenticatedDashboardMembersRoute
+  '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
+  '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
+  '/_authenticated/dashboard/users': typeof AuthenticatedDashboardUsersRoute
+  '/_authenticated/dashboard/visitation': typeof AuthenticatedDashboardVisitationRoute
+  '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/inactive'
+    | '/setup'
+    | '/dashboard'
+    | '/dashboard/members'
+    | '/dashboard/profile'
+    | '/dashboard/settings'
+    | '/dashboard/users'
+    | '/dashboard/visitation'
+    | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/inactive'
+    | '/setup'
+    | '/dashboard/members'
+    | '/dashboard/profile'
+    | '/dashboard/settings'
+    | '/dashboard/users'
+    | '/dashboard/visitation'
+    | '/dashboard'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/inactive'
+    | '/setup'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/dashboard/members'
+    | '/_authenticated/dashboard/profile'
+    | '/_authenticated/dashboard/settings'
+    | '/_authenticated/dashboard/users'
+    | '/_authenticated/dashboard/visitation'
+    | '/_authenticated/dashboard/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  InactiveRoute: typeof InactiveRoute
+  SetupRoute: typeof SetupRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +188,129 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inactive': {
+      id: '/inactive'
+      path: '/inactive'
+      fullPath: '/inactive'
+      preLoaderRoute: typeof InactiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/setup': {
+      id: '/setup'
+      path: '/setup'
+      fullPath: '/setup'
+      preLoaderRoute: typeof SetupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard/': {
+      id: '/_authenticated/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
+    '/_authenticated/dashboard/members': {
+      id: '/_authenticated/dashboard/members'
+      path: '/members'
+      fullPath: '/dashboard/members'
+      preLoaderRoute: typeof AuthenticatedDashboardMembersRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
+    '/_authenticated/dashboard/profile': {
+      id: '/_authenticated/dashboard/profile'
+      path: '/profile'
+      fullPath: '/dashboard/profile'
+      preLoaderRoute: typeof AuthenticatedDashboardProfileRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
+    '/_authenticated/dashboard/settings': {
+      id: '/_authenticated/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof AuthenticatedDashboardSettingsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
+    '/_authenticated/dashboard/users': {
+      id: '/_authenticated/dashboard/users'
+      path: '/users'
+      fullPath: '/dashboard/users'
+      preLoaderRoute: typeof AuthenticatedDashboardUsersRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
+    '/_authenticated/dashboard/visitation': {
+      id: '/_authenticated/dashboard/visitation'
+      path: '/visitation'
+      fullPath: '/dashboard/visitation'
+      preLoaderRoute: typeof AuthenticatedDashboardVisitationRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
   }
 }
 
+interface AuthenticatedDashboardRouteRouteChildren {
+  AuthenticatedDashboardMembersRoute: typeof AuthenticatedDashboardMembersRoute
+  AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRoute
+  AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
+  AuthenticatedDashboardUsersRoute: typeof AuthenticatedDashboardUsersRoute
+  AuthenticatedDashboardVisitationRoute: typeof AuthenticatedDashboardVisitationRoute
+  AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+}
+
+const AuthenticatedDashboardRouteRouteChildren: AuthenticatedDashboardRouteRouteChildren =
+  {
+    AuthenticatedDashboardMembersRoute: AuthenticatedDashboardMembersRoute,
+    AuthenticatedDashboardProfileRoute: AuthenticatedDashboardProfileRoute,
+    AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
+    AuthenticatedDashboardUsersRoute: AuthenticatedDashboardUsersRoute,
+    AuthenticatedDashboardVisitationRoute:
+      AuthenticatedDashboardVisitationRoute,
+    AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+  }
+
+const AuthenticatedDashboardRouteRouteWithChildren =
+  AuthenticatedDashboardRouteRoute._addFileChildren(
+    AuthenticatedDashboardRouteRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardRouteRoute: typeof AuthenticatedDashboardRouteRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardRouteRoute:
+    AuthenticatedDashboardRouteRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  InactiveRoute: InactiveRoute,
+  SetupRoute: SetupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
