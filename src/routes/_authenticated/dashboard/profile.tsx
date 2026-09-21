@@ -49,9 +49,8 @@ function ProfilePage() {
       if (next.length < 8) throw new Error("New password must be at least 8 characters.");
       const { error } = await supabase.auth.updateUser({
         password: next,
-        // @ts-expect-error current_password is supported by Lovable Cloud auth
         current_password: current,
-      });
+      } as Parameters<typeof supabase.auth.updateUser>[0]);
       if (error) throw new Error(error.message);
     },
     onSuccess: () => toast.success("Password changed."),

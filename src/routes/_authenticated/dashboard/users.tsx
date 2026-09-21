@@ -187,7 +187,7 @@ function UsersPage() {
                         <span className="text-sm text-muted-foreground">{roleLabel(s.role)}</span>
                       ) : (
                         <Select
-                          value={s.role ?? undefined}
+                          value={s.role ?? ""}
                           onValueChange={(role) => setRole.mutate({ id: s.id, role: role as Role })}
                         >
                           <SelectTrigger className="w-[190px]">
