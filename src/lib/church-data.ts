@@ -66,6 +66,10 @@ export type FirstTimeVisitor = {
   wants_to_know_christ: boolean;
   wants_bible_study: boolean;
   wants_prayer: boolean;
+  wants_counselling: boolean;
+  assigned_staff: string | null;
+  follow_up_status: string;
+  remarks: string | null;
   recorded_by: string | null;
   created_at: string;
   updated_at: string;

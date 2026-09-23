@@ -77,49 +77,61 @@ export type Database = {
       first_time_visitors: {
         Row: {
           address: string | null
+          assigned_staff: string | null
           birth_date: string | null
           complete_name: string
           contact_number: string | null
           created_at: string
           discovery_source: string | null
+          follow_up_status: string
           id: string
           recorded_by: string | null
           religion: string | null
+          remarks: string | null
           updated_at: string
           visit_date: string
           wants_bible_study: boolean
+          wants_counselling: boolean
           wants_prayer: boolean
           wants_to_know_christ: boolean
         }
         Insert: {
           address?: string | null
+          assigned_staff?: string | null
           birth_date?: string | null
           complete_name: string
           contact_number?: string | null
           created_at?: string
           discovery_source?: string | null
+          follow_up_status?: string
           id?: string
           recorded_by?: string | null
           religion?: string | null
+          remarks?: string | null
           updated_at?: string
           visit_date?: string
           wants_bible_study?: boolean
+          wants_counselling?: boolean
           wants_prayer?: boolean
           wants_to_know_christ?: boolean
         }
         Update: {
           address?: string | null
+          assigned_staff?: string | null
           birth_date?: string | null
           complete_name?: string
           contact_number?: string | null
           created_at?: string
           discovery_source?: string | null
+          follow_up_status?: string
           id?: string
           recorded_by?: string | null
           religion?: string | null
+          remarks?: string | null
           updated_at?: string
           visit_date?: string
           wants_bible_study?: boolean
+          wants_counselling?: boolean
           wants_prayer?: boolean
           wants_to_know_christ?: boolean
         }
@@ -317,6 +329,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_login_email: { Args: { _full_name: string }; Returns: string }
       has_capability: {
         Args: { _capability: string; _user_id: string }
         Returns: boolean

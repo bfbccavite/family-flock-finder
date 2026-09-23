@@ -22,7 +22,7 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -38,14 +38,26 @@ function AuthPage() {
     setError(null);
     setLoading(true);
 
+    // Resolve the staff member's sign-in email from their full name. Roles and
+    // permissions are unchanged: this authenticates the same account, just by name.
+    const { data: loginEmail, error: lookupError } = await supabase.rpc("get_login_email", {
+      _full_name: fullName.trim(),
+    });
+
+    if (lookupError || !loginEmail) {
+      setError("Incorrect name or password.");
+      setLoading(false);
+      return;
+    }
+
     const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: email.trim().toLowerCase(),
+      email: loginEmail,
       password,
     });
 
     if (signInError) {
       const msg = signInError.message.toLowerCase();
-      if (msg.includes("invalid login credentials")) setError("Incorrect email or password.");
+      if (msg.includes("invalid login credentials")) setError("Incorrect name or password.");
       else if (msg.includes("email not confirmed"))
         setError("This account has not been confirmed yet.");
       else if (msg.includes("rate limit")) setError("Too many attempts. Please wait a moment.");
@@ -82,15 +94,15 @@ function AuthPage() {
           <CardContent>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="full_name">Full name</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
+                  id="full_name"
+                  type="text"
+                  autoComplete="username"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@church.org"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="e.g. Juan Dela Cruz"
                 />
               </div>
               <div className="flex flex-col gap-2">
