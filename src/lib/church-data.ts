@@ -54,6 +54,23 @@ export type Visitation = {
   created_at: string;
 };
 
+export type FirstTimeVisitor = {
+  id: string;
+  complete_name: string;
+  visit_date: string;
+  birth_date: string | null;
+  address: string | null;
+  contact_number: string | null;
+  religion: string | null;
+  discovery_source: string | null;
+  wants_to_know_christ: boolean;
+  wants_bible_study: boolean;
+  wants_prayer: boolean;
+  recorded_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
 export const MEMBERSHIP_STATUSES = [
   { value: "active", label: "Active" },
   { value: "inactive", label: "Inactive" },
@@ -167,6 +184,21 @@ export function useVisitations() {
         .order("visit_date", { ascending: false });
       if (error) throw error;
       return data as Visitation[];
+    },
+  });
+}
+
+export function useFirstTimeVisitors() {
+  return useQuery({
+    queryKey: ["first-time-visitors"],
+    queryFn: async (): Promise<FirstTimeVisitor[]> => {
+      const { data, error } = await supabase
+        .from("first_time_visitors")
+        .select("*")
+        .order("visit_date", { ascending: false })
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data as FirstTimeVisitor[];
     },
   });
 }

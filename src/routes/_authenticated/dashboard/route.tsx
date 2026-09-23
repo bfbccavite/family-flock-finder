@@ -33,13 +33,13 @@ function DashboardLayout() {
   const abbreviation = settings?.abbreviation ?? "BFBC";
 
   return (
-    <div className="flex min-h-screen bg-muted/30">
+    <div className="flex min-h-screen bg-muted/35">
       <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar md:flex">
-        <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-5">
-          <ChurchMark abbreviation={abbreviation} />
+        <div className="flex h-20 items-center gap-3 border-b border-sidebar-border px-5">
+          <ChurchMark abbreviation={abbreviation} className="h-12 w-12" />
           <div className="leading-tight">
-            <p className="text-sm font-semibold text-sidebar-foreground">{abbreviation}</p>
-            <p className="text-xs text-sidebar-foreground/60">Church Records</p>
+            <p className="font-display text-base font-bold text-sidebar-foreground">{abbreviation}</p>
+            <p className="text-xs text-sidebar-foreground/55">Church Management</p>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto">
@@ -53,7 +53,7 @@ function DashboardLayout() {
           churchName={churchName}
           abbreviation={abbreviation}
         />
-        <main className="flex-1 px-4 py-6 md:px-8 md:py-8">
+        <main className="flex-1 px-4 py-6 md:px-8 md:py-8 lg:px-10">
           <Outlet />
         </main>
       </div>

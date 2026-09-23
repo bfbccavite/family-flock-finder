@@ -5,6 +5,7 @@ import {
   ClipboardList,
   HeartHandshake,
   BarChart3,
+  ClipboardPenLine,
   Settings,
   ShieldCheck,
   type LucideIcon,
@@ -33,10 +34,16 @@ export const NAV_SECTIONS: NavSection[] = [
     items: [
       { label: "Members", href: "/dashboard/members", icon: Users, capability: "view_members" },
       {
-        label: "Visitation",
+        label: "Member Visitations",
         href: "/dashboard/visitation",
         icon: HeartHandshake,
         capability: "view_visitation",
+      },
+      {
+        label: "Sunday Visitor Intake",
+        href: "/dashboard/visitors",
+        icon: ClipboardPenLine,
+        capability: "view_visitors",
       },
       {
         label: "Attendance",
@@ -49,8 +56,7 @@ export const NAV_SECTIONS: NavSection[] = [
         label: "Reports",
         href: "/dashboard/reports",
         icon: BarChart3,
-        capability: "view_reports",
-        comingSoon: true,
+        capability: "view_visitors",
       },
     ],
   },
