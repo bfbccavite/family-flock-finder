@@ -39,7 +39,7 @@ export function AppHeader({
   }
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-background/95 px-4 backdrop-blur md:px-6">
+    <header className="sticky top-0 z-30 flex min-h-20 items-center gap-3 border-b bg-background/90 px-4 py-3 backdrop-blur md:px-8">
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
         <SheetTrigger asChild>
           <Button variant="ghost" size="icon" className="md:hidden" aria-label="Open menu">
@@ -48,15 +48,18 @@ export function AppHeader({
         </SheetTrigger>
         <SheetContent side="left" className="w-72 bg-sidebar p-0">
           <SheetTitle className="sr-only">Navigation menu</SheetTitle>
-          <div className="flex h-16 items-center gap-2 border-b border-sidebar-border px-5">
-            <ChurchMark abbreviation={abbreviation} />
+           <div className="flex h-20 items-center gap-3 border-b border-sidebar-border px-5">
+             <ChurchMark abbreviation={abbreviation} className="h-12 w-12" />
             <span className="text-sm font-semibold text-sidebar-foreground">{churchName}</span>
           </div>
           <SidebarNav role={profile.role} onNavigate={() => setMobileOpen(false)} />
         </SheetContent>
       </Sheet>
 
-      <p className="hidden truncate font-serif text-base font-semibold sm:block">{churchName}</p>
+      <div className="hidden min-w-0 sm:block">
+        <p className="truncate font-display text-base font-bold">{churchName}</p>
+        <p className="text-xs text-muted-foreground">Church Management System</p>
+      </div>
 
       <div className="flex-1" />
 

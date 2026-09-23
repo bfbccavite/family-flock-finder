@@ -18,9 +18,11 @@ import { Route as AuthenticatedDashboardRouteRouteImport } from './routes/_authe
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as AuthenticatedDashboardMembersRouteImport } from './routes/_authenticated/dashboard/members'
 import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard/profile'
+import { Route as AuthenticatedDashboardReportsRouteImport } from './routes/_authenticated/dashboard/reports'
 import { Route as AuthenticatedDashboardSettingsRouteImport } from './routes/_authenticated/dashboard/settings'
 import { Route as AuthenticatedDashboardUsersRouteImport } from './routes/_authenticated/dashboard/users'
 import { Route as AuthenticatedDashboardVisitationRouteImport } from './routes/_authenticated/dashboard/visitation'
+import { Route as AuthenticatedDashboardVisitorsRouteImport } from './routes/_authenticated/dashboard/visitors'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -70,6 +72,12 @@ const AuthenticatedDashboardProfileRoute =
     path: '/profile',
     getParentRoute: () => AuthenticatedDashboardRouteRoute,
   } as any)
+const AuthenticatedDashboardReportsRoute =
+  AuthenticatedDashboardReportsRouteImport.update({
+    id: '/reports',
+    path: '/reports',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
 const AuthenticatedDashboardSettingsRoute =
   AuthenticatedDashboardSettingsRouteImport.update({
     id: '/settings',
@@ -88,6 +96,12 @@ const AuthenticatedDashboardVisitationRoute =
     path: '/visitation',
     getParentRoute: () => AuthenticatedDashboardRouteRoute,
   } as any)
+const AuthenticatedDashboardVisitorsRoute =
+  AuthenticatedDashboardVisitorsRouteImport.update({
+    id: '/visitors',
+    path: '/visitors',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -97,9 +111,11 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/dashboard/members': typeof AuthenticatedDashboardMembersRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
+  '/dashboard/reports': typeof AuthenticatedDashboardReportsRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/users': typeof AuthenticatedDashboardUsersRoute
   '/dashboard/visitation': typeof AuthenticatedDashboardVisitationRoute
+  '/dashboard/visitors': typeof AuthenticatedDashboardVisitorsRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesByTo {
@@ -109,9 +125,11 @@ export interface FileRoutesByTo {
   '/setup': typeof SetupRoute
   '/dashboard/members': typeof AuthenticatedDashboardMembersRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
+  '/dashboard/reports': typeof AuthenticatedDashboardReportsRoute
   '/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/dashboard/users': typeof AuthenticatedDashboardUsersRoute
   '/dashboard/visitation': typeof AuthenticatedDashboardVisitationRoute
+  '/dashboard/visitors': typeof AuthenticatedDashboardVisitorsRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRoutesById {
@@ -124,9 +142,11 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/_authenticated/dashboard/members': typeof AuthenticatedDashboardMembersRoute
   '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
+  '/_authenticated/dashboard/reports': typeof AuthenticatedDashboardReportsRoute
   '/_authenticated/dashboard/settings': typeof AuthenticatedDashboardSettingsRoute
   '/_authenticated/dashboard/users': typeof AuthenticatedDashboardUsersRoute
   '/_authenticated/dashboard/visitation': typeof AuthenticatedDashboardVisitationRoute
+  '/_authenticated/dashboard/visitors': typeof AuthenticatedDashboardVisitorsRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
 }
 export interface FileRouteTypes {
@@ -139,9 +159,11 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/dashboard/members'
     | '/dashboard/profile'
+    | '/dashboard/reports'
     | '/dashboard/settings'
     | '/dashboard/users'
     | '/dashboard/visitation'
+    | '/dashboard/visitors'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -151,9 +173,11 @@ export interface FileRouteTypes {
     | '/setup'
     | '/dashboard/members'
     | '/dashboard/profile'
+    | '/dashboard/reports'
     | '/dashboard/settings'
     | '/dashboard/users'
     | '/dashboard/visitation'
+    | '/dashboard/visitors'
     | '/dashboard'
   id:
     | '__root__'
@@ -165,9 +189,11 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/dashboard/members'
     | '/_authenticated/dashboard/profile'
+    | '/_authenticated/dashboard/reports'
     | '/_authenticated/dashboard/settings'
     | '/_authenticated/dashboard/users'
     | '/_authenticated/dashboard/visitation'
+    | '/_authenticated/dashboard/visitors'
     | '/_authenticated/dashboard/'
   fileRoutesById: FileRoutesById
 }
@@ -244,6 +270,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardProfileRouteImport
       parentRoute: typeof AuthenticatedDashboardRouteRoute
     }
+    '/_authenticated/dashboard/reports': {
+      id: '/_authenticated/dashboard/reports'
+      path: '/reports'
+      fullPath: '/dashboard/reports'
+      preLoaderRoute: typeof AuthenticatedDashboardReportsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
     '/_authenticated/dashboard/settings': {
       id: '/_authenticated/dashboard/settings'
       path: '/settings'
@@ -265,15 +298,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardVisitationRouteImport
       parentRoute: typeof AuthenticatedDashboardRouteRoute
     }
+    '/_authenticated/dashboard/visitors': {
+      id: '/_authenticated/dashboard/visitors'
+      path: '/visitors'
+      fullPath: '/dashboard/visitors'
+      preLoaderRoute: typeof AuthenticatedDashboardVisitorsRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
   }
 }
 
 interface AuthenticatedDashboardRouteRouteChildren {
   AuthenticatedDashboardMembersRoute: typeof AuthenticatedDashboardMembersRoute
   AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRoute
+  AuthenticatedDashboardReportsRoute: typeof AuthenticatedDashboardReportsRoute
   AuthenticatedDashboardSettingsRoute: typeof AuthenticatedDashboardSettingsRoute
   AuthenticatedDashboardUsersRoute: typeof AuthenticatedDashboardUsersRoute
   AuthenticatedDashboardVisitationRoute: typeof AuthenticatedDashboardVisitationRoute
+  AuthenticatedDashboardVisitorsRoute: typeof AuthenticatedDashboardVisitorsRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
 
@@ -281,10 +323,12 @@ const AuthenticatedDashboardRouteRouteChildren: AuthenticatedDashboardRouteRoute
   {
     AuthenticatedDashboardMembersRoute: AuthenticatedDashboardMembersRoute,
     AuthenticatedDashboardProfileRoute: AuthenticatedDashboardProfileRoute,
+    AuthenticatedDashboardReportsRoute: AuthenticatedDashboardReportsRoute,
     AuthenticatedDashboardSettingsRoute: AuthenticatedDashboardSettingsRoute,
     AuthenticatedDashboardUsersRoute: AuthenticatedDashboardUsersRoute,
     AuthenticatedDashboardVisitationRoute:
       AuthenticatedDashboardVisitationRoute,
+    AuthenticatedDashboardVisitorsRoute: AuthenticatedDashboardVisitorsRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   }
 
