@@ -223,6 +223,8 @@ export type Database = {
           id: string
           last_login_at: string | null
           phone: string | null
+          security_answer_hash: string | null
+          security_question: string | null
           updated_at: string
         }
         Insert: {
@@ -233,6 +235,8 @@ export type Database = {
           id: string
           last_login_at?: string | null
           phone?: string | null
+          security_answer_hash?: string | null
+          security_question?: string | null
           updated_at?: string
         }
         Update: {
@@ -243,6 +247,8 @@ export type Database = {
           id?: string
           last_login_at?: string | null
           phone?: string | null
+          security_answer_hash?: string | null
+          security_question?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -330,6 +336,17 @@ export type Database = {
     }
     Functions: {
       get_login_email: { Args: { _full_name: string }; Returns: string }
+      get_security_question: { Args: { _full_name: string }; Returns: string }
+      hash_security_answer: { Args: { _answer: string }; Returns: string }
+      normalize_security_answer: { Args: { _answer: string }; Returns: string }
+      set_own_security_recovery: {
+        Args: { _answer: string; _question: string }
+        Returns: undefined
+      }
+      verify_security_answer: {
+        Args: { _answer: string; _full_name: string }
+        Returns: boolean
+      }
       has_capability: {
         Args: { _capability: string; _user_id: string }
         Returns: boolean

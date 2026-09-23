@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -5,10 +6,19 @@ import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { roleLabel } from "@/lib/roles";
 import { useStaffProfile } from "@/lib/church-data";
+import { SECURITY_QUESTIONS } from "@/lib/security-questions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/ui/password-input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const Route = createFileRoute("/_authenticated/dashboard/profile")({
   head: () => ({
@@ -23,6 +33,16 @@ export const Route = createFileRoute("/_authenticated/dashboard/profile")({
 function ProfilePage() {
   const { data: profile } = useStaffProfile();
   const queryClient = useQueryClient();
+  const [securityQuestion, setSecurityQuestion] = useState<string>(SECURITY_QUESTIONS[0]);
+
+  useEffect(() => {
+    if (
+      profile?.security_question &&
+      (SECURITY_QUESTIONS as readonly string[]).includes(profile.security_question)
+    ) {
+      setSecurityQuestion(profile.security_question);
+    }
+  }, [profile?.security_question]);
 
   const saveProfile = useMutation({
     mutationFn: async (form: FormData) => {
@@ -38,6 +58,23 @@ function ProfilePage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["staff-profile"] });
       toast.success("Profile updated.");
+    },
+    onError: (error: Error) => toast.error(error.message),
+  });
+
+  const saveRecovery = useMutation({
+    mutationFn: async (form: FormData) => {
+      const answer = String(form.get("security_answer") ?? "").trim();
+      if (answer.length < 2) throw new Error("Enter a security answer.");
+      const { error } = await supabase.rpc("set_own_security_recovery", {
+        _question: securityQuestion,
+        _answer: answer,
+      });
+      if (error) throw new Error(error.message);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["staff-profile"] });
+      toast.success("Security question updated.");
     },
     onError: (error: Error) => toast.error(error.message),
   });
@@ -99,6 +136,56 @@ function ProfilePage() {
 
       <Card>
         <CardHeader>
+          <CardTitle className="text-base">Password recovery</CardTitle>
+          <CardDescription>
+            Used on the sign-in page if you forget your password. Your secret answer is stored
+            securely and is never shown again.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              saveRecovery.mutate(new FormData(e.currentTarget));
+              e.currentTarget.reset();
+            }}
+            className="flex flex-col gap-4"
+          >
+            <div className="grid gap-2">
+              <Label>Security question</Label>
+              <Select value={securityQuestion} onValueChange={setSecurityQuestion}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {SECURITY_QUESTIONS.map((q) => (
+                    <SelectItem key={q} value={q}>
+                      {q}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="security_answer">Secret answer</Label>
+              <Input
+                id="security_answer"
+                name="security_answer"
+                required
+                autoComplete="off"
+                placeholder={profile.security_question ? "Enter a new answer to save" : undefined}
+              />
+            </div>
+            <Button type="submit" className="self-start" disabled={saveRecovery.isPending}>
+              {saveRecovery.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Save security question
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <CardTitle className="text-base">Change password</CardTitle>
           <CardDescription>Use at least 8 characters.</CardDescription>
         </CardHeader>
@@ -113,20 +200,18 @@ function ProfilePage() {
           >
             <div className="grid gap-2">
               <Label htmlFor="current_password">Current password</Label>
-              <Input
+              <PasswordInput
                 id="current_password"
                 name="current_password"
-                type="password"
                 autoComplete="current-password"
                 required
               />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="new_password">New password</Label>
-              <Input
+              <PasswordInput
                 id="new_password"
                 name="new_password"
-                type="password"
                 autoComplete="new-password"
                 required
                 minLength={8}

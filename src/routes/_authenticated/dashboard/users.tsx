@@ -13,6 +13,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/ui/password-input";
+import { SECURITY_QUESTIONS } from "@/lib/security-questions";
 import { Switch } from "@/components/ui/switch";
 import {
   Dialog,
@@ -64,6 +66,7 @@ function UsersPage() {
   const createAccount = useServerFn(createStaffAccount);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newRole, setNewRole] = useState<Role>("secretary");
+  const [securityQuestion, setSecurityQuestion] = useState<string>(SECURITY_QUESTIONS[0]);
 
   const staffQuery = useQuery({
     queryKey: ["staff-list"],
@@ -93,6 +96,8 @@ function UsersPage() {
           password: String(form.get("password") ?? ""),
           phone: String(form.get("phone") ?? ""),
           role: newRole,
+          security_question: securityQuestion as (typeof SECURITY_QUESTIONS)[number],
+          security_answer: String(form.get("security_answer") ?? ""),
         },
       });
     },
@@ -252,7 +257,26 @@ function UsersPage() {
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Temporary password</Label>
-              <Input id="password" name="password" type="password" required minLength={8} />
+              <PasswordInput id="password" name="password" required minLength={8} />
+            </div>
+            <div className="grid gap-2">
+              <Label>Security question</Label>
+              <Select value={securityQuestion} onValueChange={setSecurityQuestion}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {SECURITY_QUESTIONS.map((q) => (
+                    <SelectItem key={q} value={q}>
+                      {q}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="security_answer">Secret answer</Label>
+              <Input id="security_answer" name="security_answer" required autoComplete="off" />
             </div>
             <div className="grid gap-2">
               <Label>Role</Label>

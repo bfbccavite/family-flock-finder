@@ -10,6 +10,7 @@ export type StaffProfile = {
   active: boolean;
   last_login_at: string | null;
   created_at: string;
+  security_question: string | null;
   role: Role | null;
 };
 
@@ -118,7 +119,7 @@ export function useStaffProfile() {
       const [profileRes, rolesRes] = await Promise.all([
         supabase
           .from("profiles")
-          .select("id, full_name, email, phone, active, last_login_at, created_at")
+          .select("id, full_name, email, phone, active, last_login_at, created_at, security_question")
           .eq("id", user.id)
           .maybeSingle(),
         supabase.from("user_roles").select("role").eq("user_id", user.id),
