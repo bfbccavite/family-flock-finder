@@ -20,6 +20,9 @@ export type Database = {
           answer_salt: string
           auth_email: string
           created_at: string
+          failed_attempts: number
+          last_attempt_at: string | null
+          locked_until: string | null
           normalized_full_name: string
           security_question: string
           updated_at: string
@@ -30,6 +33,9 @@ export type Database = {
           answer_salt: string
           auth_email: string
           created_at?: string
+          failed_attempts?: number
+          last_attempt_at?: string | null
+          locked_until?: string | null
           normalized_full_name: string
           security_question: string
           updated_at?: string
@@ -40,6 +46,9 @@ export type Database = {
           answer_salt?: string
           auth_email?: string
           created_at?: string
+          failed_attempts?: number
+          last_attempt_at?: string | null
+          locked_until?: string | null
           normalized_full_name?: string
           security_question?: string
           updated_at?: string
