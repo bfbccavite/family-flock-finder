@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      account_recovery: {
+        Row: {
+          answer_hash: string
+          answer_salt: string
+          auth_email: string
+          created_at: string
+          normalized_full_name: string
+          security_question: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          answer_hash: string
+          answer_salt: string
+          auth_email: string
+          created_at?: string
+          normalized_full_name: string
+          security_question: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          answer_hash?: string
+          answer_salt?: string
+          auth_email?: string
+          created_at?: string
+          normalized_full_name?: string
+          security_question?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       church_settings: {
         Row: {
           abbreviation: string
