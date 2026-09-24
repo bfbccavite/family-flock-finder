@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CalendarClock, Users, HeartHandshake } from "lucide-react";
+import { CalendarClock, Users, HeartHandshake, UserRoundCheck } from "lucide-react";
 import { can, roleLabel, ROLE_DESCRIPTIONS } from "@/lib/roles";
 import { NAV_SECTIONS } from "@/lib/nav";
-import { useMembers, useStaffProfile, useVisitations } from "@/lib/church-data";
+import { useFirstTimeVisitors, useMembers, useStaffProfile, useVisitations } from "@/lib/church-data";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -16,9 +16,11 @@ function DashboardHome() {
 
   const membersQuery = useMembers();
   const visitsQuery = useVisitations();
+  const visitorsQuery = useFirstTimeVisitors();
 
   const canViewMembers = can(role, "view_members");
   const canViewVisits = can(role, "view_visitation");
+  const canViewVisitors = can(role, "view_visitors");
 
   const activeMembers =
     membersQuery.data?.filter((m) => m.membership_status === "active").length ?? 0;
@@ -29,6 +31,7 @@ function DashboardHome() {
     visitsQuery.data?.filter(
       (v) => v.status === "completed" && v.visit_date.slice(0, 7) === today.slice(0, 7),
     ).length ?? 0;
+  const visitorsThisMonth = visitorsQuery.data?.filter((visitor) => visitor.visit_date.slice(0, 7) === today.slice(0, 7)).length ?? 0;
 
   const quickLinks = NAV_SECTIONS.flatMap((s) => s.items).filter(
     (item) => item.href !== "/dashboard" && !item.comingSoon && (!item.capability || can(role, item.capability)),
@@ -52,8 +55,8 @@ function DashboardHome() {
         </p>
       </div>
 
-      {(canViewMembers || canViewVisits) && (
-        <div className="grid gap-4 sm:grid-cols-3">
+      {(canViewMembers || canViewVisits || canViewVisitors) && (
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {canViewMembers && (
             <StatCard
               icon={<Users className="h-5 w-5" />}
@@ -77,6 +80,7 @@ function DashboardHome() {
               />
             </>
           )}
+          {canViewVisitors && <StatCard icon={<UserRoundCheck className="h-5 w-5" />} label="First-time visitors" value={visitorsThisMonth} hint="Recorded this month" />}
         </div>
       )}
 

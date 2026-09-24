@@ -10,6 +10,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ChurchMark } from "@/components/app-shell/church-mark";
+import { SECURITY_QUESTIONS } from "@/lib/account.functions";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const Route = createFileRoute("/setup")({
   head: () => ({
@@ -34,6 +36,7 @@ function SetupPage() {
   const checkSetup = useServerFn(setupNeeded);
   const createAdmin = useServerFn(createFirstAdmin);
   const [submitting, setSubmitting] = useState(false);
+  const [question, setQuestion] = useState<(typeof SECURITY_QUESTIONS)[number] | "">("");
 
   const { data: setup, isLoading } = useQuery({
     queryKey: ["setup-needed"],
@@ -48,8 +51,9 @@ function SetupPage() {
       await createAdmin({
         data: {
           full_name: String(form.get("full_name") ?? ""),
-          email: String(form.get("email") ?? ""),
           password: String(form.get("password") ?? ""),
+          security_question: question,
+          secret_answer: String(form.get("secret_answer") ?? ""),
         },
       });
       toast.success("Administrator created. You can now sign in.");
@@ -107,10 +111,6 @@ function SetupPage() {
                 <Input id="full_name" name="full_name" required placeholder="Juan dela Cruz" />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" name="email" type="email" required placeholder="you@church.org" />
-              </div>
-              <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
@@ -120,6 +120,17 @@ function SetupPage() {
                   minLength={8}
                   placeholder="At least 8 characters"
                 />
+              </div>
+              <div className="grid gap-2">
+                <Label>Security question</Label>
+                <Select required value={question} onValueChange={(value) => setQuestion(value as (typeof SECURITY_QUESTIONS)[number])}>
+                  <SelectTrigger><SelectValue placeholder="Choose a security question" /></SelectTrigger>
+                  <SelectContent>{SECURITY_QUESTIONS.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}</SelectContent>
+                </Select>
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="secret_answer">Secret answer</Label>
+                <Input id="secret_answer" name="secret_answer" required minLength={2} autoComplete="off" />
               </div>
               <Button type="submit" className="w-full" disabled={submitting}>
                 {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
