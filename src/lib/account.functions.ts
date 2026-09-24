@@ -1,4 +1,3 @@
-import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
@@ -12,9 +11,18 @@ export const SECURITY_QUESTIONS = [
 ] as const;
 
 const normalizeName = (value: string) => value.trim().replace(/\s+/g, " ").toLocaleLowerCase("en-US");
-const normalizeAnswer = (value: string) => value.trim().replace(/\s+/g, " ").toLocaleLowerCase("en-US");
-const hashAnswer = (answer: string, salt: string) =>
-  createHash("sha256").update(`${salt}:${normalizeAnswer(answer)}`).digest("hex");
+const normalizeAnswer = (value: string) => value.trim();
+const hashAnswer = async (answer: string, salt: string) => {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`${salt}:${normalizeAnswer(answer)}`));
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+};
+const randomSalt = () => Array.from(crypto.getRandomValues(new Uint8Array(16)), (byte) => byte.toString(16).padStart(2, "0")).join("");
+const safeEqual = (actual: string, expected: string) => {
+  if (actual.length !== expected.length) return false;
+  let result = 0;
+  for (let index = 0; index < actual.length; index += 1) result |= actual.charCodeAt(index) ^ expected.charCodeAt(index);
+  return result === 0;
+};
 const signInAddress = () => `staff-${crypto.randomUUID()}@bfbc.local`;
 
 const credentialsSchema = z.object({
@@ -29,7 +37,7 @@ const recoveryDetailsSchema = z.object({
 });
 
 export const resolveNameLogin = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => credentialsSchema.parse(data))
+  .inputValidator((data: unknown) => z.object({ full_name: z.string().trim().min(2).max(120) }).parse(data))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: account } = await supabaseAdmin
@@ -73,9 +81,8 @@ export const resetPasswordWithSecurityAnswer = createServerFn({ method: "POST" }
       throw new Error("Too many attempts. Please try again later.");
     }
 
-    const actual = Buffer.from(hashAnswer(data.secret_answer, account.answer_salt), "hex");
-    const expected = Buffer.from(account.answer_hash, "hex");
-    const correct = actual.length === expected.length && timingSafeEqual(actual, expected);
+    const actual = await hashAnswer(data.secret_answer, account.answer_salt);
+    const correct = safeEqual(actual, account.answer_hash);
     if (!correct) {
       const attempts = account.failed_attempts + 1;
       await supabaseAdmin.from("account_recovery").update({
@@ -114,14 +121,14 @@ export async function createNameBasedAccount({
   });
   if (error || !created.user) throw new Error(error?.message ?? "Could not create the staff account.");
 
-  const salt = randomBytes(16).toString("hex");
+  const salt = randomSalt();
   const { error: recoveryError } = await supabaseAdmin.from("account_recovery").insert({
     user_id: created.user.id,
     normalized_full_name: normalized,
     auth_email: email,
     security_question,
     answer_salt: salt,
-    answer_hash: hashAnswer(secret_answer, salt),
+    answer_hash: await hashAnswer(secret_answer, salt),
   });
   if (recoveryError) {
     await supabaseAdmin.auth.admin.deleteUser(created.user.id);
@@ -134,11 +141,11 @@ export const saveMyRecoveryDetails = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => z.object({ security_question: z.enum(SECURITY_QUESTIONS), secret_answer: z.string().trim().min(2).max(200) }).parse(data))
   .handler(async ({ data, context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const salt = randomBytes(16).toString("hex");
+    const salt = randomSalt();
     const { error } = await supabaseAdmin.from("account_recovery").update({
       security_question: data.security_question,
       answer_salt: salt,
-      answer_hash: hashAnswer(data.secret_answer, salt),
+      answer_hash: await hashAnswer(data.secret_answer, salt),
       failed_attempts: 0,
       locked_until: null,
     }).eq("user_id", context.userId);

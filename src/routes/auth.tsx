@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Loader2 } from "lucide-react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ChurchMark } from "@/components/app-shell/church-mark";
+import { resolveNameLogin } from "@/lib/account.functions";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -22,10 +24,12 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const resolveLogin = useServerFn(resolveNameLogin);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -38,10 +42,10 @@ function AuthPage() {
     setError(null);
     setLoading(true);
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: email.trim().toLowerCase(),
-      password,
-    });
+    const account = await resolveLogin({ data: { full_name: fullName } }).catch(() => ({ email: null }));
+    const { error: signInError } = account.email
+      ? await supabase.auth.signInWithPassword({ email: account.email, password })
+      : { error: new Error("invalid login credentials") };
 
     if (signInError) {
       const msg = signInError.message.toLowerCase();
@@ -81,29 +85,26 @@ function AuthPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="email">Email</Label>
+               <div className="flex flex-col gap-2">
+                 <Label htmlFor="full_name">Full name</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
+                   id="full_name"
+                   autoComplete="username"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@church.org"
+                   value={fullName}
+                   onChange={(e) => setFullName(e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                <div className="relative">
+                  <Input id="password" type={showPassword ? "text" : "password"} autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} className="pr-11" />
+                  <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2" aria-label={showPassword ? "Hide password" : "Show password"} onClick={() => setShowPassword((value) => !value)}>
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </Button>
+                </div>
               </div>
+              <Link to="/forgot-password" className="self-end text-sm font-medium text-primary hover:underline">Forgot Password?</Link>
               {error && (
                 <p role="alert" className="text-sm text-destructive">
                   {error}
