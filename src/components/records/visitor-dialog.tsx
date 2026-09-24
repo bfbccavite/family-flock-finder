@@ -16,13 +16,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
 function today() {
@@ -46,8 +39,6 @@ export function VisitorDialog({
   const [wantsChrist, setWantsChrist] = useState(visitor?.wants_to_know_christ ?? false);
   const [wantsStudy, setWantsStudy] = useState(visitor?.wants_bible_study ?? false);
   const [wantsPrayer, setWantsPrayer] = useState(visitor?.wants_prayer ?? false);
-  const [wantsCounselling, setWantsCounselling] = useState(visitor?.wants_counselling ?? false);
-  const [followUpStatus, setFollowUpStatus] = useState(visitor?.follow_up_status ?? "pending");
 
   const save = useMutation({
     mutationFn: async (form: FormData) => {
@@ -63,10 +54,6 @@ export function VisitorDialog({
         wants_to_know_christ: wantsChrist,
         wants_bible_study: wantsStudy,
         wants_prayer: wantsPrayer,
-        wants_counselling: wantsCounselling,
-        assigned_staff: String(form.get("assigned_staff") ?? "").trim() || null,
-        follow_up_status: followUpStatus,
-        remarks: String(form.get("remarks") ?? "").trim() || null,
         recorded_by: userData.user?.id ?? null,
       };
 
@@ -145,48 +132,7 @@ export function VisitorDialog({
               <Checkbox checked={wantsPrayer} onCheckedChange={(checked) => setWantsPrayer(checked === true)} />
               <span>I want someone to pray for me</span>
             </label>
-            <label className="flex items-start gap-3 text-sm">
-              <Checkbox checked={wantsCounselling} onCheckedChange={(checked) => setWantsCounselling(checked === true)} />
-              <span>I want counselling</span>
-            </label>
           </fieldset>
-
-          <fieldset className="grid gap-4 rounded-lg border p-4 sm:grid-cols-2">
-            <legend className="px-1 font-display text-sm font-semibold">Follow-up</legend>
-            <div className="grid gap-2">
-              <Label htmlFor="assigned_staff">Assigned staff (who talked with them)</Label>
-              <Input
-                id="assigned_staff"
-                name="assigned_staff"
-                defaultValue={visitor?.assigned_staff ?? ""}
-                placeholder="Staff name"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="follow_up_status">Next steps status</Label>
-              <Select value={followUpStatus} onValueChange={setFollowUpStatus}>
-                <SelectTrigger id="follow_up_status">
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="followed_up">Followed up</SelectItem>
-                  <SelectItem value="met">Met</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </fieldset>
-
-          <div className="grid gap-2">
-            <Label htmlFor="remarks">Remarks</Label>
-            <Textarea
-              id="remarks"
-              name="remarks"
-              rows={5}
-              defaultValue={visitor?.remarks ?? ""}
-              placeholder="Add any additional comments or notes about this visitor."
-            />
-          </div>
         </form>
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Cancel</Button>

@@ -5,20 +5,13 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { createFirstAdmin, setupNeeded } from "@/lib/staff.functions";
-import { DEFAULT_ADMIN, SECURITY_QUESTIONS } from "@/lib/security-questions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { PasswordInput } from "@/components/ui/password-input";
 import { ChurchMark } from "@/components/app-shell/church-mark";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SECURITY_QUESTIONS } from "@/lib/account.functions";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export const Route = createFileRoute("/setup")({
   head: () => ({
@@ -43,7 +36,7 @@ function SetupPage() {
   const checkSetup = useServerFn(setupNeeded);
   const createAdmin = useServerFn(createFirstAdmin);
   const [submitting, setSubmitting] = useState(false);
-  const [securityQuestion, setSecurityQuestion] = useState<string>(DEFAULT_ADMIN.security_question);
+  const [question, setQuestion] = useState<(typeof SECURITY_QUESTIONS)[number] | "">("");
 
   const { data: setup, isLoading } = useQuery({
     queryKey: ["setup-needed"],
@@ -58,10 +51,9 @@ function SetupPage() {
       await createAdmin({
         data: {
           full_name: String(form.get("full_name") ?? ""),
-          email: String(form.get("email") ?? ""),
           password: String(form.get("password") ?? ""),
-          security_question: securityQuestion as (typeof SECURITY_QUESTIONS)[number],
-          security_answer: String(form.get("security_answer") ?? ""),
+          security_question: question,
+          secret_answer: String(form.get("secret_answer") ?? ""),
         },
       });
       toast.success("Administrator created. You can now sign in.");
@@ -116,57 +108,29 @@ function SetupPage() {
             <CardContent className="flex flex-col gap-5 pt-6">
               <div className="grid gap-2">
                 <Label htmlFor="full_name">Full name</Label>
-                <Input
-                  id="full_name"
-                  name="full_name"
-                  required
-                  defaultValue={DEFAULT_ADMIN.full_name}
-                />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  defaultValue={DEFAULT_ADMIN.email}
-                />
+                <Input id="full_name" name="full_name" required placeholder="Juan dela Cruz" />
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
-                <PasswordInput
+                <Input
                   id="password"
                   name="password"
+                  type="password"
                   required
                   minLength={8}
-                  defaultValue={DEFAULT_ADMIN.password}
+                  placeholder="At least 8 characters"
                 />
               </div>
               <div className="grid gap-2">
                 <Label>Security question</Label>
-                <Select value={securityQuestion} onValueChange={setSecurityQuestion}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {SECURITY_QUESTIONS.map((q) => (
-                      <SelectItem key={q} value={q}>
-                        {q}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
+                <Select required value={question} onValueChange={(value) => setQuestion(value as (typeof SECURITY_QUESTIONS)[number])}>
+                  <SelectTrigger><SelectValue placeholder="Choose a security question" /></SelectTrigger>
+                  <SelectContent>{SECURITY_QUESTIONS.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="security_answer">Secret answer</Label>
-                <Input
-                  id="security_answer"
-                  name="security_answer"
-                  required
-                  defaultValue={DEFAULT_ADMIN.security_answer}
-                  autoComplete="off"
-                />
+                <Label htmlFor="secret_answer">Secret answer</Label>
+                <Input id="secret_answer" name="secret_answer" required minLength={2} autoComplete="off" />
               </div>
               <Button type="submit" className="w-full" disabled={submitting}>
                 {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

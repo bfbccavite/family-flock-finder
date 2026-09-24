@@ -10,7 +10,6 @@ export type StaffProfile = {
   active: boolean;
   last_login_at: string | null;
   created_at: string;
-  security_question: string | null;
   role: Role | null;
 };
 
@@ -67,10 +66,6 @@ export type FirstTimeVisitor = {
   wants_to_know_christ: boolean;
   wants_bible_study: boolean;
   wants_prayer: boolean;
-  wants_counselling: boolean;
-  assigned_staff: string | null;
-  follow_up_status: string;
-  remarks: string | null;
   recorded_by: string | null;
   created_at: string;
   updated_at: string;
@@ -119,7 +114,7 @@ export function useStaffProfile() {
       const [profileRes, rolesRes] = await Promise.all([
         supabase
           .from("profiles")
-          .select("id, full_name, email, phone, active, last_login_at, created_at, security_question")
+          .select("id, full_name, email, phone, active, last_login_at, created_at")
           .eq("id", user.id)
           .maybeSingle(),
         supabase.from("user_roles").select("role").eq("user_id", user.id),

@@ -80,9 +80,7 @@ export function AppHeader({
         <DropdownMenuContent align="end" className="w-56">
           <DropdownMenuLabel className="flex flex-col">
             <span className="truncate">{profile.full_name || "Staff"}</span>
-            <span className="truncate text-xs font-normal text-muted-foreground">
-              {profile.email}
-            </span>
+            <span className="text-xs font-normal text-muted-foreground">{roleLabel(profile.role)}</span>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>

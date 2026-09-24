@@ -20,25 +20,6 @@ export const Route = createFileRoute("/_authenticated/dashboard/reports")({
   component: VisitorReportsPage,
 });
 
-const FOLLOW_UP_STATUS: Record<string, { label: string; className: string }> = {
-  met: { label: "Met", className: "bg-primary/10 text-primary" },
-  followed_up: { label: "Followed up", className: "bg-secondary/15 text-secondary" },
-  pending: { label: "Pending", className: "bg-muted text-muted-foreground" },
-};
-
-const PENDING_STATUS = { label: "Pending", className: "bg-muted text-muted-foreground" };
-
-function FollowUpBadge({ status }: { status: string }) {
-  const config = FOLLOW_UP_STATUS[status] ?? PENDING_STATUS;
-  return (
-    <span
-      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${config.className}`}
-    >
-      {config.label}
-    </span>
-  );
-}
-
 function VisitorReportsPage() {
   const { data: profile } = useStaffProfile();
   const { data: visitors = [] } = useFirstTimeVisitors();
@@ -74,7 +55,7 @@ function VisitorReportsPage() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.38fr)]">
         <Card>
           <CardHeader className="flex flex-row flex-wrap items-end justify-between gap-3"><div><CardTitle>All first-time visitors</CardTitle><p className="mt-1 text-sm text-muted-foreground">Filter the list by date of visit.</p></div><div className="flex items-center gap-2"><Input aria-label="Filter visitor report by date of visit" type="date" value={dateFilter} onChange={(event) => setDateFilter(event.target.value)} className="w-[180px]" />{dateFilter && <Button variant="outline" size="sm" onClick={() => setDateFilter("")}>Clear</Button>}</div></CardHeader>
-          <CardContent className="p-0"><div className="overflow-x-auto"><Table><TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Date</TableHead><TableHead>Found us through</TableHead><TableHead>Prayer</TableHead><TableHead>Next steps</TableHead><TableHead>Assigned staff</TableHead><TableHead>Remarks</TableHead></TableRow></TableHeader><TableBody>{filtered.map((visitor) => <TableRow key={visitor.id}><TableCell className="font-medium">{visitor.complete_name}</TableCell><TableCell><span className="inline-flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5 text-primary" />{new Date(`${visitor.visit_date}T00:00:00`).toLocaleDateString()}</span></TableCell><TableCell>{visitor.discovery_source || "Not specified"}</TableCell><TableCell>{visitor.wants_prayer ? "Yes" : "No"}</TableCell><TableCell><FollowUpBadge status={visitor.follow_up_status} /></TableCell><TableCell>{visitor.assigned_staff || "—"}</TableCell><TableCell className="max-w-[240px] whitespace-pre-wrap break-words text-sm text-muted-foreground">{visitor.remarks || "—"}</TableCell></TableRow>)}</TableBody></Table></div>{filtered.length === 0 && <p className="py-10 text-center text-sm text-muted-foreground">No visitors found for this date.</p>}</CardContent>
+          <CardContent className="p-0"><div className="overflow-x-auto"><Table><TableHeader><TableRow><TableHead>Name</TableHead><TableHead>Date</TableHead><TableHead>Found us through</TableHead><TableHead>Prayer</TableHead></TableRow></TableHeader><TableBody>{filtered.map((visitor) => <TableRow key={visitor.id}><TableCell className="font-medium">{visitor.complete_name}</TableCell><TableCell><span className="inline-flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5 text-primary" />{new Date(`${visitor.visit_date}T00:00:00`).toLocaleDateString()}</span></TableCell><TableCell>{visitor.discovery_source || "Not specified"}</TableCell><TableCell>{visitor.wants_prayer ? "Yes" : "No"}</TableCell></TableRow>)}</TableBody></Table></div>{filtered.length === 0 && <p className="py-10 text-center text-sm text-muted-foreground">No visitors found for this date.</p>}</CardContent>
         </Card>
         <Card>
           <CardHeader><CardTitle>How visitors found BFBC</CardTitle></CardHeader>
