@@ -119,49 +119,91 @@ export type Database = {
       first_time_visitors: {
         Row: {
           address: string | null
+          anniversary_date: string | null
           birth_date: string | null
+          companion_of: string | null
           complete_name: string
           contact_number: string | null
+          contacted_by: string | null
+          contacted_by_other: string | null
           created_at: string
+          discovery_other: string | null
           discovery_source: string | null
+          follow_up_result: string | null
+          found_facebook: boolean
+          found_google: boolean
+          gender: string | null
           id: string
           recorded_by: string | null
+          referred_by: string | null
           religion: string | null
+          spiritual_maturity: string | null
+          spiritual_needs_met: boolean | null
           updated_at: string
+          urgent_outreach: boolean
           visit_date: string
           wants_bible_study: boolean
+          wants_counseling: boolean
           wants_prayer: boolean
           wants_to_know_christ: boolean
         }
         Insert: {
           address?: string | null
+          anniversary_date?: string | null
           birth_date?: string | null
+          companion_of?: string | null
           complete_name: string
           contact_number?: string | null
+          contacted_by?: string | null
+          contacted_by_other?: string | null
           created_at?: string
+          discovery_other?: string | null
           discovery_source?: string | null
+          follow_up_result?: string | null
+          found_facebook?: boolean
+          found_google?: boolean
+          gender?: string | null
           id?: string
           recorded_by?: string | null
+          referred_by?: string | null
           religion?: string | null
+          spiritual_maturity?: string | null
+          spiritual_needs_met?: boolean | null
           updated_at?: string
+          urgent_outreach?: boolean
           visit_date?: string
           wants_bible_study?: boolean
+          wants_counseling?: boolean
           wants_prayer?: boolean
           wants_to_know_christ?: boolean
         }
         Update: {
           address?: string | null
+          anniversary_date?: string | null
           birth_date?: string | null
+          companion_of?: string | null
           complete_name?: string
           contact_number?: string | null
+          contacted_by?: string | null
+          contacted_by_other?: string | null
           created_at?: string
+          discovery_other?: string | null
           discovery_source?: string | null
+          follow_up_result?: string | null
+          found_facebook?: boolean
+          found_google?: boolean
+          gender?: string | null
           id?: string
           recorded_by?: string | null
+          referred_by?: string | null
           religion?: string | null
+          spiritual_maturity?: string | null
+          spiritual_needs_met?: boolean | null
           updated_at?: string
+          urgent_outreach?: boolean
           visit_date?: string
           wants_bible_study?: boolean
+          wants_counseling?: boolean
           wants_prayer?: boolean
           wants_to_know_christ?: boolean
         }
@@ -170,6 +212,7 @@ export type Database = {
       members: {
         Row: {
           address: string | null
+          anniversary_date: string | null
           baptism_date: string | null
           birth_date: string | null
           civil_status: string | null
@@ -188,10 +231,12 @@ export type Database = {
           ministry: string | null
           notes: string | null
           phone: string | null
+          spiritual_maturity: string | null
           updated_at: string
         }
         Insert: {
           address?: string | null
+          anniversary_date?: string | null
           baptism_date?: string | null
           birth_date?: string | null
           civil_status?: string | null
@@ -210,10 +255,12 @@ export type Database = {
           ministry?: string | null
           notes?: string | null
           phone?: string | null
+          spiritual_maturity?: string | null
           updated_at?: string
         }
         Update: {
           address?: string | null
+          anniversary_date?: string | null
           baptism_date?: string | null
           birth_date?: string | null
           civil_status?: string | null
@@ -232,6 +279,7 @@ export type Database = {
           ministry?: string | null
           notes?: string | null
           phone?: string | null
+          spiritual_maturity?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -350,6 +398,44 @@ export type Database = {
             columns: ["member_id"]
             isOneToOne: false
             referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      visitor_follow_up_activities: {
+        Row: {
+          activity_date: string
+          activity_type: string
+          created_at: string
+          details: string | null
+          id: string
+          recorded_by: string | null
+          visitor_id: string
+        }
+        Insert: {
+          activity_date?: string
+          activity_type: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          recorded_by?: string | null
+          visitor_id: string
+        }
+        Update: {
+          activity_date?: string
+          activity_type?: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          recorded_by?: string | null
+          visitor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visitor_follow_up_activities_visitor_id_fkey"
+            columns: ["visitor_id"]
+            isOneToOne: false
+            referencedRelation: "first_time_visitors"
             referencedColumns: ["id"]
           },
         ]
