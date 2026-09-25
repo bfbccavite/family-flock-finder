@@ -12,10 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as InactiveRouteImport } from './routes/inactive'
 import { Route as SetupRouteImport } from './routes/setup'
 import { Route as AuthenticatedDashboardRouteRouteImport } from './routes/_authenticated/dashboard/route'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
+import { Route as AuthenticatedDashboardCelebrationsRouteImport } from './routes/_authenticated/dashboard/celebrations'
 import { Route as AuthenticatedDashboardMembersRouteImport } from './routes/_authenticated/dashboard/members'
 import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard/profile'
 import { Route as AuthenticatedDashboardReportsRouteImport } from './routes/_authenticated/dashboard/reports'
@@ -38,6 +40,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InactiveRoute = InactiveRouteImport.update({
   id: '/inactive',
   path: '/inactive',
@@ -58,6 +65,12 @@ const AuthenticatedDashboardIndexRoute =
   AuthenticatedDashboardIndexRouteImport.update({
     id: '/',
     path: '/',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
+const AuthenticatedDashboardCelebrationsRoute =
+  AuthenticatedDashboardCelebrationsRouteImport.update({
+    id: '/celebrations',
+    path: '/celebrations',
     getParentRoute: () => AuthenticatedDashboardRouteRoute,
   } as any)
 const AuthenticatedDashboardMembersRoute =
@@ -106,9 +119,11 @@ const AuthenticatedDashboardVisitorsRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/inactive': typeof InactiveRoute
   '/setup': typeof SetupRoute
   '/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
+  '/dashboard/celebrations': typeof AuthenticatedDashboardCelebrationsRoute
   '/dashboard/members': typeof AuthenticatedDashboardMembersRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/reports': typeof AuthenticatedDashboardReportsRoute
@@ -121,8 +136,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/inactive': typeof InactiveRoute
   '/setup': typeof SetupRoute
+  '/dashboard/celebrations': typeof AuthenticatedDashboardCelebrationsRoute
   '/dashboard/members': typeof AuthenticatedDashboardMembersRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/dashboard/reports': typeof AuthenticatedDashboardReportsRoute
@@ -137,9 +154,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/inactive': typeof InactiveRoute
   '/setup': typeof SetupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
+  '/_authenticated/dashboard/celebrations': typeof AuthenticatedDashboardCelebrationsRoute
   '/_authenticated/dashboard/members': typeof AuthenticatedDashboardMembersRoute
   '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
   '/_authenticated/dashboard/reports': typeof AuthenticatedDashboardReportsRoute
@@ -154,9 +173,11 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/forgot-password'
     | '/inactive'
     | '/setup'
     | '/dashboard'
+    | '/dashboard/celebrations'
     | '/dashboard/members'
     | '/dashboard/profile'
     | '/dashboard/reports'
@@ -169,8 +190,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/forgot-password'
     | '/inactive'
     | '/setup'
+    | '/dashboard/celebrations'
     | '/dashboard/members'
     | '/dashboard/profile'
     | '/dashboard/reports'
@@ -184,9 +207,11 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/forgot-password'
     | '/inactive'
     | '/setup'
     | '/_authenticated/dashboard'
+    | '/_authenticated/dashboard/celebrations'
     | '/_authenticated/dashboard/members'
     | '/_authenticated/dashboard/profile'
     | '/_authenticated/dashboard/reports'
@@ -201,6 +226,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   InactiveRoute: typeof InactiveRoute
   SetupRoute: typeof SetupRoute
 }
@@ -226,6 +252,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inactive': {
@@ -254,6 +287,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
+    '/_authenticated/dashboard/celebrations': {
+      id: '/_authenticated/dashboard/celebrations'
+      path: '/celebrations'
+      fullPath: '/dashboard/celebrations'
+      preLoaderRoute: typeof AuthenticatedDashboardCelebrationsRouteImport
       parentRoute: typeof AuthenticatedDashboardRouteRoute
     }
     '/_authenticated/dashboard/members': {
@@ -309,6 +349,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedDashboardRouteRouteChildren {
+  AuthenticatedDashboardCelebrationsRoute: typeof AuthenticatedDashboardCelebrationsRoute
   AuthenticatedDashboardMembersRoute: typeof AuthenticatedDashboardMembersRoute
   AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRoute
   AuthenticatedDashboardReportsRoute: typeof AuthenticatedDashboardReportsRoute
@@ -321,6 +362,8 @@ interface AuthenticatedDashboardRouteRouteChildren {
 
 const AuthenticatedDashboardRouteRouteChildren: AuthenticatedDashboardRouteRouteChildren =
   {
+    AuthenticatedDashboardCelebrationsRoute:
+      AuthenticatedDashboardCelebrationsRoute,
     AuthenticatedDashboardMembersRoute: AuthenticatedDashboardMembersRoute,
     AuthenticatedDashboardProfileRoute: AuthenticatedDashboardProfileRoute,
     AuthenticatedDashboardReportsRoute: AuthenticatedDashboardReportsRoute,
@@ -353,6 +396,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   InactiveRoute: InactiveRoute,
   SetupRoute: SetupRoute,
 }
