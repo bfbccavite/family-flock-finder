@@ -57,6 +57,9 @@ export const createStaffAccount = createServerFn({ method: "POST" })
     if (checkError) throw new Error(checkError.message);
     if (!allowed) throw new Error("You are not allowed to create staff accounts.");
 
-    await createNameBasedAccount(data);
+    await createNameBasedAccount({
+      ...data,
+      ...(data.phone === undefined ? {} : { phone: data.phone }),
+    });
     return { ok: true };
   });

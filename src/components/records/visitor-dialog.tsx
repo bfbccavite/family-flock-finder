@@ -39,6 +39,12 @@ export function VisitorDialog({
   const [wantsChrist, setWantsChrist] = useState(visitor?.wants_to_know_christ ?? false);
   const [wantsStudy, setWantsStudy] = useState(visitor?.wants_bible_study ?? false);
   const [wantsPrayer, setWantsPrayer] = useState(visitor?.wants_prayer ?? false);
+  const [wantsCounseling, setWantsCounseling] = useState(visitor?.wants_counseling ?? false);
+  const [facebook, setFacebook] = useState(visitor?.found_facebook ?? false);
+  const [google, setGoogle] = useState(visitor?.found_google ?? false);
+  const [referred, setReferred] = useState(Boolean(visitor?.referred_by));
+  const [companion, setCompanion] = useState(Boolean(visitor?.companion_of));
+  const [other, setOther] = useState(Boolean(visitor?.discovery_other));
 
   const save = useMutation({
     mutationFn: async (form: FormData) => {
@@ -50,10 +56,19 @@ export function VisitorDialog({
         address: String(form.get("address") ?? "").trim() || null,
         contact_number: String(form.get("contact_number") ?? "").trim() || null,
         religion: String(form.get("religion") ?? "").trim() || null,
-        discovery_source: String(form.get("discovery_source") ?? "").trim() || null,
+        discovery_source: null,
+        found_facebook: facebook,
+        found_google: google,
+        referred_by: referred ? String(form.get("referred_by") ?? "").trim() || null : null,
+        companion_of: companion ? String(form.get("companion_of") ?? "").trim() || null : null,
+        discovery_other: other ? String(form.get("discovery_other") ?? "").trim() || null : null,
+        gender: String(form.get("gender") ?? "") || null,
+        spiritual_maturity: String(form.get("spiritual_maturity") ?? "") || null,
+        anniversary_date: String(form.get("anniversary_date") ?? "") || null,
         wants_to_know_christ: wantsChrist,
         wants_bible_study: wantsStudy,
         wants_prayer: wantsPrayer,
+        wants_counseling: wantsCounseling,
         recorded_by: userData.user?.id ?? null,
       };
 
@@ -112,11 +127,19 @@ export function VisitorDialog({
               <Label htmlFor="religion">Religion</Label>
               <Input id="religion" name="religion" defaultValue={visitor?.religion ?? ""} />
             </div>
-            <div className="grid gap-2 sm:col-span-2">
-              <Label htmlFor="discovery_source">How did they find out about our church?</Label>
-              <Textarea id="discovery_source" name="discovery_source" rows={2} defaultValue={visitor?.discovery_source ?? ""} />
-            </div>
+            <div className="grid gap-2"><Label htmlFor="gender">Gender</Label><select id="gender" name="gender" defaultValue={visitor?.gender ?? ""} className="h-9 rounded-md border border-input bg-background px-3 text-sm"><option value="">Not specified</option><option>Male</option><option>Female</option></select></div>
+            <div className="grid gap-2"><Label htmlFor="spiritual_maturity">Spiritual maturity</Label><select id="spiritual_maturity" name="spiritual_maturity" defaultValue={visitor?.spiritual_maturity ?? ""} className="h-9 rounded-md border border-input bg-background px-3 text-sm"><option value="">Not specified</option>{["A","B","C","D"].map((stage) => <option key={stage}>{stage}</option>)}</select></div>
+            <div className="grid gap-2"><Label htmlFor="anniversary_date">Anniversary date</Label><Input id="anniversary_date" name="anniversary_date" type="date" defaultValue={visitor?.anniversary_date ?? ""} /></div>
           </div>
+
+          <fieldset className="grid gap-3 rounded-lg border p-4">
+            <legend className="px-1 font-display text-sm font-semibold">How did they find out about our church?</legend>
+            <label className="flex items-center gap-3 text-sm"><Checkbox checked={facebook} onCheckedChange={(value) => setFacebook(value === true)} />Facebook / Social Media</label>
+            <label className="flex items-center gap-3 text-sm"><Checkbox checked={google} onCheckedChange={(value) => setGoogle(value === true)} />Google / Google Maps</label>
+            <div className="grid gap-2 sm:grid-cols-[auto_1fr]"><label className="flex items-center gap-3 text-sm"><Checkbox checked={referred} onCheckedChange={(value) => setReferred(value === true)} />Referred by:</label><Input name="referred_by" disabled={!referred} defaultValue={visitor?.referred_by ?? ""} aria-label="Name of person who referred visitor" /></div>
+            <div className="grid gap-2 sm:grid-cols-[auto_1fr]"><label className="flex items-center gap-3 text-sm"><Checkbox checked={companion} onCheckedChange={(value) => setCompanion(value === true)} />Companion of:</label><Input name="companion_of" disabled={!companion} defaultValue={visitor?.companion_of ?? ""} aria-label="Name of visitor companion" /></div>
+            <div className="grid gap-2"><label className="flex items-center gap-3 text-sm"><Checkbox checked={other} onCheckedChange={(value) => setOther(value === true)} />Others:</label><Textarea name="discovery_other" disabled={!other} rows={3} defaultValue={visitor?.discovery_other ?? ""} aria-label="Other discovery details" /></div>
+          </fieldset>
 
           <fieldset className="grid gap-3 rounded-lg border bg-muted/40 p-4">
             <legend className="px-1 font-display text-sm font-semibold">Spiritual next steps</legend>
@@ -124,6 +147,7 @@ export function VisitorDialog({
               <Checkbox checked={wantsChrist} onCheckedChange={(checked) => setWantsChrist(checked === true)} />
               <span>I want to know more about Christ</span>
             </label>
+            <label className="flex items-start gap-3 text-sm"><Checkbox checked={wantsCounseling} onCheckedChange={(checked) => setWantsCounseling(checked === true)} /><span>I want to have counseling</span></label>
             <label className="flex items-start gap-3 text-sm">
               <Checkbox checked={wantsStudy} onCheckedChange={(checked) => setWantsStudy(checked === true)} />
               <span>I want to have a Bible Study</span>

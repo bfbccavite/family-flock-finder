@@ -8,6 +8,7 @@ import {
   ClipboardPenLine,
   Settings,
   ShieldCheck,
+  PartyPopper,
   type LucideIcon,
 } from "lucide-react";
 
@@ -58,6 +59,7 @@ export const NAV_SECTIONS: NavSection[] = [
         icon: BarChart3,
         capability: "view_visitors",
       },
+      { label: "Celebrations", href: "/dashboard/celebrations", icon: PartyPopper, capability: "view_members" },
     ],
   },
   {

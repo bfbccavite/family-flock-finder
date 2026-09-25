@@ -31,6 +31,8 @@ export type Member = {
   family_id: string | null;
   family_role: string | null;
   notes: string | null;
+  anniversary_date: string | null;
+  spiritual_maturity: string | null;
   created_at: string;
 };
 
@@ -66,9 +68,31 @@ export type FirstTimeVisitor = {
   wants_to_know_christ: boolean;
   wants_bible_study: boolean;
   wants_prayer: boolean;
+  wants_counseling: boolean;
+  urgent_outreach: boolean;
+  found_facebook: boolean;
+  found_google: boolean;
+  referred_by: string | null;
+  companion_of: string | null;
+  discovery_other: string | null;
+  gender: string | null;
+  spiritual_maturity: string | null;
+  anniversary_date: string | null;
+  spiritual_needs_met: boolean | null;
+  contacted_by: string | null;
+  contacted_by_other: string | null;
+  follow_up_result: string | null;
   recorded_by: string | null;
   created_at: string;
   updated_at: string;
+};
+
+export type VisitorFollowUpActivity = {
+  id: string;
+  visitor_id: string;
+  activity_date: string;
+  activity_type: string;
+  details: string | null;
 };
 
 export const MEMBERSHIP_STATUSES = [
@@ -199,6 +223,20 @@ export function useFirstTimeVisitors() {
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data as FirstTimeVisitor[];
+    },
+  });
+}
+
+export function useVisitorFollowUpActivities() {
+  return useQuery({
+    queryKey: ["visitor-follow-up-activities"],
+    queryFn: async (): Promise<VisitorFollowUpActivity[]> => {
+      const { data, error } = await supabase
+        .from("visitor_follow_up_activities")
+        .select("id, visitor_id, activity_date, activity_type, details")
+        .order("activity_date", { ascending: false });
+      if (error) throw error;
+      return data;
     },
   });
 }
