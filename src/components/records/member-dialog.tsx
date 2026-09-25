@@ -85,6 +85,8 @@ export function MemberDialog({
         family_id: resolvedFamily,
         family_role: text("family_role"),
         notes: text("notes"),
+        anniversary_date: text("anniversary_date"),
+        spiritual_maturity: text("spiritual_maturity"),
       };
 
       if (member) {
@@ -219,6 +221,8 @@ export function MemberDialog({
                 defaultValue={member?.baptism_date ?? ""}
               />
             </Field>
+            <Field label="Anniversary date" htmlFor="anniversary_date"><Input id="anniversary_date" name="anniversary_date" type="date" defaultValue={member?.anniversary_date ?? ""} /></Field>
+            <Field label="Spiritual maturity stage"><select name="spiritual_maturity" defaultValue={member?.spiritual_maturity ?? ""} className="h-9 rounded-md border border-input bg-background px-3 text-sm"><option value="">Not specified</option>{["A","B","C","D"].map((stage) => <option key={stage}>{stage}</option>)}</select></Field>
           </section>
 
           <section className="grid gap-4 border-t pt-5 sm:grid-cols-2">
