@@ -106,7 +106,7 @@ export async function createNameBasedAccount({
   secret_answer,
   role,
   phone,
-}: z.infer<typeof credentialsSchema> & z.infer<typeof recoveryDetailsSchema> & { role: string; phone?: string }) {
+}: z.infer<typeof credentialsSchema> & z.infer<typeof recoveryDetailsSchema> & { role: string; phone?: string | undefined }) {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const normalized = normalizeName(full_name);
   const { data: existing } = await supabaseAdmin.from("account_recovery").select("user_id").eq("normalized_full_name", normalized).maybeSingle();
