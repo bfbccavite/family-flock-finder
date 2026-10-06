@@ -173,9 +173,9 @@ function VisitorReportsPage() {
     const gender: Record<string, number> = { Male: 0, Female: 0, "Not specified": 0 };
     people.forEach((p) => {
       const a = ageOf(p.birth);
-      age[a === null ? "Unknown" : a <= 11 ? "Kids (0-11)" : a <= 20 ? "Youth (12-20)" : a <= 59 ? "Adult (21-59)" : "Senior (60+)"]++;
+      (age as any)[a === null ? "Unknown" : a <= 11 ? "Kids (0-11)" : a <= 20 ? "Youth (12-20)" : a <= 59 ? "Adult (21-59)" : "Senior (60+)"]++;
       const g = (p.gender ?? "").toLowerCase();
-      gender[g === "male" ? "Male" : g === "female" ? "Female" : "Not specified"]++;
+      (gender as any)[g === "male" ? "Male" : g === "female" ? "Female" : "Not specified"]++;
     });
     const status = MEMBERSHIP_STATUSES.map((s) => [s.label, members.filter((m) => m.membership_status === s.value).length] as [string, number]);
     return { age: Object.entries(age), gender: Object.entries(gender), status };
