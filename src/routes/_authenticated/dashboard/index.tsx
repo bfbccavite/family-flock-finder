@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CalendarClock, Users, HeartHandshake, UserRoundCheck } from "lucide-react";
+import { AlertTriangle, CalendarClock, Users, HeartHandshake, UserRoundCheck } from "lucide-react";
 import { can, roleLabel, ROLE_DESCRIPTIONS } from "@/lib/roles";
 import { NAV_SECTIONS } from "@/lib/nav";
 import { useFirstTimeVisitors, useMembers, useStaffProfile, useVisitations } from "@/lib/church-data";
@@ -82,6 +82,23 @@ function DashboardHome() {
           )}
           {canViewVisitors && <StatCard icon={<UserRoundCheck className="h-5 w-5" />} label="First-time visitors" value={visitorsThisMonth} hint="Recorded this month" />}
         </div>
+      )}
+
+      {canViewVisitors && (visitorsQuery.data?.filter((v) => v.urgent_outreach && v.spiritual_needs_met !== true).length ?? 0) > 0 && (
+        <Card className="border-destructive/40 bg-destructive/5">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-destructive"><AlertTriangle className="h-5 w-5" />Urgent outreach needed</CardTitle>
+            <CardDescription>These first-time visitors asked for a spiritual next step and still need follow-up.</CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-2">
+            {visitorsQuery.data!.filter((v) => v.urgent_outreach && v.spiritual_needs_met !== true).map((v) => (
+              <Badge key={v.id} variant="destructive" className="font-medium">
+                {v.complete_name} · {[v.wants_to_know_christ && "Know Christ", v.wants_bible_study && "Bible Study", v.wants_prayer && "Prayer", v.wants_counseling && "Counseling"].filter(Boolean).join(", ")}
+              </Badge>
+            ))}
+            <Link to="/dashboard/reports" className="ml-auto text-sm font-medium text-primary hover:underline">Open follow-up report →</Link>
+          </CardContent>
+        </Card>
       )}
 
       <section className="flex flex-col gap-4">
