@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ChurchMark } from "@/components/app-shell/church-mark";
-import { resolveNameLogin } from "@/lib/account.functions";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -24,12 +22,11 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
-  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const resolveLogin = useServerFn(resolveNameLogin);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -42,21 +39,11 @@ function AuthPage() {
     setError(null);
     setLoading(true);
 
-    let account: { email: string | null };
-    try {
-      account = await resolveLogin({ data: { full_name: fullName } });
-    } catch {
-      setError("The sign-in service is not reachable. Please try again or contact your administrator.");
-      setLoading(false);
-      return;
-    }
-    const { error: signInError } = account.email
-      ? await supabase.auth.signInWithPassword({ email: account.email, password })
-      : { error: new Error("invalid login credentials") };
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
 
     if (signInError) {
       const msg = signInError.message.toLowerCase();
-      if (msg.includes("invalid login credentials")) setError("Incorrect full name or password.");
+      if (msg.includes("invalid login credentials")) setError("Incorrect email or password.");
       else if (msg.includes("email not confirmed"))
         setError("This account has not been confirmed yet.");
       else if (msg.includes("rate limit")) setError("Too many attempts. Please wait a moment.");
@@ -93,13 +80,14 @@ function AuthPage() {
           <CardContent>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                <div className="flex flex-col gap-2">
-                 <Label htmlFor="full_name">Full name</Label>
+                 <Label htmlFor="email">Email</Label>
                 <Input
-                   id="full_name"
-                   autoComplete="username"
+                   id="email"
+                   type="email"
+                   autoComplete="email"
                   required
-                   value={fullName}
-                   onChange={(e) => setFullName(e.target.value)}
+                   value={email}
+                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-2">
