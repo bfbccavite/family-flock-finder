@@ -42,14 +42,21 @@ function AuthPage() {
     setError(null);
     setLoading(true);
 
-    const account = await resolveLogin({ data: { full_name: fullName } }).catch(() => ({ email: null }));
+    let account: { email: string | null };
+    try {
+      account = await resolveLogin({ data: { full_name: fullName } });
+    } catch {
+      setError("The sign-in service is not reachable. Please try again or contact your administrator.");
+      setLoading(false);
+      return;
+    }
     const { error: signInError } = account.email
       ? await supabase.auth.signInWithPassword({ email: account.email, password })
       : { error: new Error("invalid login credentials") };
 
     if (signInError) {
       const msg = signInError.message.toLowerCase();
-      if (msg.includes("invalid login credentials")) setError("Incorrect email or password.");
+      if (msg.includes("invalid login credentials")) setError("Incorrect full name or password.");
       else if (msg.includes("email not confirmed"))
         setError("This account has not been confirmed yet.");
       else if (msg.includes("rate limit")) setError("Too many attempts. Please wait a moment.");

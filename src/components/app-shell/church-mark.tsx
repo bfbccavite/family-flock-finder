@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import logoAsset from "@/assets/BFBC_logo.png.asset.json";
+
 
 export function ChurchMark({
   abbreviation,
@@ -10,7 +10,7 @@ export function ChurchMark({
 }) {
   return (
     <img
-      src={logoAsset.url}
+      src="/bfbc-logo.png"
       alt={`${abbreviation} logo`}
       className={cn("h-11 w-11 shrink-0 object-contain", className)}
     />
