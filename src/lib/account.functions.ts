@@ -48,17 +48,19 @@ export const resolveNameLogin = createServerFn({ method: "POST" })
     return account?.auth_email ? { email: account.auth_email } : { email: null };
   });
 
+const emailSchema = z.string().trim().toLowerCase().email().max(255);
+
 export const getRecoveryQuestion = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => z.object({ full_name: z.string().trim().min(2).max(120) }).parse(data))
+  .inputValidator((data: unknown) => z.object({ email: emailSchema }).parse(data))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: account } = await supabaseAdmin
       .from("account_recovery")
       .select("security_question, locked_until")
-      .eq("normalized_full_name", normalizeName(data.full_name))
+      .ilike("auth_email", data.email)
       .maybeSingle();
     if (!account || account.security_question === "Recovery question not set") {
-      throw new Error("No password recovery question is available for this name.");
+      throw new Error("No password recovery question is available for this email.");
     }
     if (account.locked_until && new Date(account.locked_until) > new Date()) {
       throw new Error("Too many attempts. Please try again later.");
@@ -67,16 +69,15 @@ export const getRecoveryQuestion = createServerFn({ method: "POST" })
   });
 
 export const resetPasswordWithSecurityAnswer = createServerFn({ method: "POST" })
-  .inputValidator((data: unknown) => credentialsSchema.extend({ secret_answer: z.string().trim().min(2).max(200) }).parse(data))
+  .inputValidator((data: unknown) => z.object({ email: emailSchema, password: z.string().min(8).max(128), secret_answer: z.string().trim().min(2).max(200) }).parse(data))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const normalized = normalizeName(data.full_name);
     const { data: account } = await supabaseAdmin
       .from("account_recovery")
       .select("user_id, answer_salt, answer_hash, failed_attempts, locked_until")
-      .eq("normalized_full_name", normalized)
+      .ilike("auth_email", data.email)
       .maybeSingle();
-    if (!account) throw new Error("The name or secret answer is incorrect.");
+    if (!account) throw new Error("The email or secret answer is incorrect.");
     if (account.locked_until && new Date(account.locked_until) > new Date()) {
       throw new Error("Too many attempts. Please try again later.");
     }
@@ -90,7 +91,7 @@ export const resetPasswordWithSecurityAnswer = createServerFn({ method: "POST" }
         locked_until: attempts >= 5 ? new Date(Date.now() + 15 * 60 * 1000).toISOString() : null,
         last_attempt_at: new Date().toISOString(),
       }).eq("user_id", account.user_id);
-      throw new Error("The name or secret answer is incorrect.");
+      throw new Error("The email or secret answer is incorrect.");
     }
 
     const { error } = await supabaseAdmin.auth.admin.updateUserById(account.user_id, { password: data.password });
