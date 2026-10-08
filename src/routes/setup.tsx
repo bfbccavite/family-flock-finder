@@ -122,15 +122,15 @@ function SetupPage() {
                 />
               </div>
               <div className="grid gap-2">
-                <Label>Security question</Label>
-                <Select required value={question} onValueChange={(value) => setQuestion(value as (typeof SECURITY_QUESTIONS)[number])}>
+                <Label>Security question (optional)</Label>
+                <Select value={question} onValueChange={(value) => setQuestion(value as (typeof SECURITY_QUESTIONS)[number])}>
                   <SelectTrigger><SelectValue placeholder="Choose a security question" /></SelectTrigger>
                   <SelectContent>{SECURITY_QUESTIONS.map((item) => <SelectItem key={item} value={item}>{item}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="secret_answer">Secret answer</Label>
-                <Input id="secret_answer" name="secret_answer" required minLength={2} autoComplete="off" />
+                <Label htmlFor="secret_answer">Secret answer (optional)</Label>
+                <Input id="secret_answer" name="secret_answer" minLength={2} autoComplete="off" />
               </div>
               <Button type="submit" className="w-full" disabled={submitting}>
                 {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

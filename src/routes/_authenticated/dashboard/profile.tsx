@@ -28,6 +28,7 @@ function ProfilePage() {
   const { data: profile } = useStaffProfile();
   const queryClient = useQueryClient();
   const saveRecoveryFn = useServerFn(saveMyRecoveryDetails);
+  const [recoverySaved, setRecoverySaved] = useState(false);
   const [question, setQuestion] = useState<(typeof SECURITY_QUESTIONS)[number] | "">("");
 
   const saveProfile = useMutation({
@@ -64,7 +65,11 @@ function ProfilePage() {
   });
   const saveRecovery = useMutation({
     mutationFn: async (form: FormData) => saveRecoveryFn({ data: { security_question: question as (typeof SECURITY_QUESTIONS)[number], secret_answer: String(form.get("secret_answer") ?? "") } }),
-    onSuccess: () => toast.success("Password recovery question saved."),
+    onSuccess: () => {
+      toast.success("Password recovery question saved.");
+      setRecoverySaved(true);
+      setTimeout(() => document.getElementById("change-password")?.scrollIntoView({ behavior: "smooth" }), 100);
+    },
     onError: (error: Error) => toast.error(error.message),
   });
 
@@ -119,10 +124,15 @@ function ProfilePage() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card id="change-password" className={recoverySaved ? "border-primary ring-2 ring-primary/30" : undefined}>
         <CardHeader>
           <CardTitle className="text-base">Change password</CardTitle>
           <CardDescription>Use at least 8 characters.</CardDescription>
+          {recoverySaved && (
+            <p className="mt-2 rounded-md bg-primary/10 p-3 text-sm font-medium text-foreground">
+              Your recovery question is saved. Now replace the temporary password your Super Admin gave you: enter it as the current password, then choose your own new password.
+            </p>
+          )}
         </CardHeader>
         <CardContent>
           <form

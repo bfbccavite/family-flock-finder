@@ -32,8 +32,9 @@ const credentialsSchema = z.object({
 
 const recoveryDetailsSchema = z.object({
   full_name: z.string().trim().min(2).max(120),
-  security_question: z.enum(SECURITY_QUESTIONS),
-  secret_answer: z.string().trim().min(2).max(200),
+  email: z.string().trim().toLowerCase().email().max(255).optional().or(z.literal("").transform(() => undefined)),
+  security_question: z.enum(SECURITY_QUESTIONS).optional().or(z.literal("").transform(() => undefined)),
+  secret_answer: z.string().trim().max(200).optional(),
 });
 
 export const resolveNameLogin = createServerFn({ method: "POST" })
@@ -107,29 +108,31 @@ export async function createNameBasedAccount({
   secret_answer,
   role,
   phone,
+  email: providedEmail,
 }: z.infer<typeof credentialsSchema> & z.infer<typeof recoveryDetailsSchema> & { role: string; phone?: string | undefined }) {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const normalized = normalizeName(full_name);
   const { data: existing } = await supabaseAdmin.from("account_recovery").select("user_id").eq("normalized_full_name", normalized).maybeSingle();
   if (existing) throw new Error("A staff account with this full name already exists.");
 
-  const email = signInAddress();
+  const email = providedEmail || signInAddress();
+  const hasRecovery = Boolean(security_question && secret_answer && secret_answer.length >= 2);
   const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
     email,
     password,
     email_confirm: true,
-    user_metadata: { full_name, profile_email: "", phone: phone || null, role, active: true },
+    user_metadata: { full_name, profile_email: providedEmail ?? "", phone: phone || null, role, active: true },
   });
-  if (error || !created.user) throw new Error(error?.message ?? "Could not create the staff account.");
+  if (error || !created.user) throw new Error(error?.message?.includes("already") ? "An account with this email already exists." : error?.message ?? "Could not create the staff account.");
 
   const salt = randomSalt();
   const { error: recoveryError } = await supabaseAdmin.from("account_recovery").insert({
     user_id: created.user.id,
     normalized_full_name: normalized,
     auth_email: email,
-    security_question,
+    security_question: hasRecovery ? security_question! : "Recovery question not set",
     answer_salt: salt,
-    answer_hash: await hashAnswer(secret_answer, salt),
+    answer_hash: await hashAnswer(hasRecovery ? secret_answer! : randomSalt(), salt),
   });
   if (recoveryError) {
     await supabaseAdmin.auth.admin.deleteUser(created.user.id);
