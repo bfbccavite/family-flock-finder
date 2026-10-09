@@ -1,0 +1,1 @@
+ALTER TABLE public.baptismal_candidates ADD COLUMN IF NOT EXISTS is_class_completed boolean NOT NULL DEFAULT false, ADD COLUMN IF NOT EXISTS class_completed_at timestamptz;
