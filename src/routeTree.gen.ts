@@ -17,6 +17,7 @@ import { Route as InactiveRouteImport } from './routes/inactive'
 import { Route as SetupRouteImport } from './routes/setup'
 import { Route as AuthenticatedDashboardRouteRouteImport } from './routes/_authenticated/dashboard/route'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
+import { Route as AuthenticatedDashboardCandidatesRouteImport } from './routes/_authenticated/dashboard/candidates'
 import { Route as AuthenticatedDashboardCelebrationsRouteImport } from './routes/_authenticated/dashboard/celebrations'
 import { Route as AuthenticatedDashboardMembersRouteImport } from './routes/_authenticated/dashboard/members'
 import { Route as AuthenticatedDashboardProfileRouteImport } from './routes/_authenticated/dashboard/profile'
@@ -65,6 +66,12 @@ const AuthenticatedDashboardIndexRoute =
   AuthenticatedDashboardIndexRouteImport.update({
     id: '/',
     path: '/',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
+const AuthenticatedDashboardCandidatesRoute =
+  AuthenticatedDashboardCandidatesRouteImport.update({
+    id: '/candidates',
+    path: '/candidates',
     getParentRoute: () => AuthenticatedDashboardRouteRoute,
   } as any)
 const AuthenticatedDashboardCelebrationsRoute =
@@ -123,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/inactive': typeof InactiveRoute
   '/setup': typeof SetupRoute
   '/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
+  '/dashboard/candidates': typeof AuthenticatedDashboardCandidatesRoute
   '/dashboard/celebrations': typeof AuthenticatedDashboardCelebrationsRoute
   '/dashboard/members': typeof AuthenticatedDashboardMembersRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
@@ -139,6 +147,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/inactive': typeof InactiveRoute
   '/setup': typeof SetupRoute
+  '/dashboard/candidates': typeof AuthenticatedDashboardCandidatesRoute
   '/dashboard/celebrations': typeof AuthenticatedDashboardCelebrationsRoute
   '/dashboard/members': typeof AuthenticatedDashboardMembersRoute
   '/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
@@ -158,6 +167,7 @@ export interface FileRoutesById {
   '/inactive': typeof InactiveRoute
   '/setup': typeof SetupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
+  '/_authenticated/dashboard/candidates': typeof AuthenticatedDashboardCandidatesRoute
   '/_authenticated/dashboard/celebrations': typeof AuthenticatedDashboardCelebrationsRoute
   '/_authenticated/dashboard/members': typeof AuthenticatedDashboardMembersRoute
   '/_authenticated/dashboard/profile': typeof AuthenticatedDashboardProfileRoute
@@ -177,6 +187,7 @@ export interface FileRouteTypes {
     | '/inactive'
     | '/setup'
     | '/dashboard'
+    | '/dashboard/candidates'
     | '/dashboard/celebrations'
     | '/dashboard/members'
     | '/dashboard/profile'
@@ -193,6 +204,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/inactive'
     | '/setup'
+    | '/dashboard/candidates'
     | '/dashboard/celebrations'
     | '/dashboard/members'
     | '/dashboard/profile'
@@ -211,6 +223,7 @@ export interface FileRouteTypes {
     | '/inactive'
     | '/setup'
     | '/_authenticated/dashboard'
+    | '/_authenticated/dashboard/candidates'
     | '/_authenticated/dashboard/celebrations'
     | '/_authenticated/dashboard/members'
     | '/_authenticated/dashboard/profile'
@@ -289,6 +302,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardRouteRoute
     }
+    '/_authenticated/dashboard/candidates': {
+      id: '/_authenticated/dashboard/candidates'
+      path: '/candidates'
+      fullPath: '/dashboard/candidates'
+      preLoaderRoute: typeof AuthenticatedDashboardCandidatesRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
     '/_authenticated/dashboard/celebrations': {
       id: '/_authenticated/dashboard/celebrations'
       path: '/celebrations'
@@ -349,6 +369,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedDashboardRouteRouteChildren {
+  AuthenticatedDashboardCandidatesRoute: typeof AuthenticatedDashboardCandidatesRoute
   AuthenticatedDashboardCelebrationsRoute: typeof AuthenticatedDashboardCelebrationsRoute
   AuthenticatedDashboardMembersRoute: typeof AuthenticatedDashboardMembersRoute
   AuthenticatedDashboardProfileRoute: typeof AuthenticatedDashboardProfileRoute
@@ -362,6 +383,8 @@ interface AuthenticatedDashboardRouteRouteChildren {
 
 const AuthenticatedDashboardRouteRouteChildren: AuthenticatedDashboardRouteRouteChildren =
   {
+    AuthenticatedDashboardCandidatesRoute:
+      AuthenticatedDashboardCandidatesRoute,
     AuthenticatedDashboardCelebrationsRoute:
       AuthenticatedDashboardCelebrationsRoute,
     AuthenticatedDashboardMembersRoute: AuthenticatedDashboardMembersRoute,

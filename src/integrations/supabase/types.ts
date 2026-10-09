@@ -56,6 +56,104 @@ export type Database = {
         }
         Relationships: []
       }
+      baptismal_candidates: {
+        Row: {
+          address: string | null
+          anniversary_date: string | null
+          applied_for_membership: boolean
+          baptism_date: string | null
+          birth_date: string | null
+          civil_status: string | null
+          created_at: string
+          created_by: string | null
+          date_joined: string | null
+          email: string | null
+          family_id: string | null
+          family_role: string | null
+          first_name: string
+          gender: string | null
+          id: string
+          interviewed_for_membership: boolean
+          is_baptized: boolean
+          last_name: string
+          membership_status: string
+          middle_name: string | null
+          ministry: string | null
+          notes: string | null
+          phone: string | null
+          spiritual_maturity: string | null
+          transferred_at: string | null
+          transferred_member_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          anniversary_date?: string | null
+          applied_for_membership?: boolean
+          baptism_date?: string | null
+          birth_date?: string | null
+          civil_status?: string | null
+          created_at?: string
+          created_by?: string | null
+          date_joined?: string | null
+          email?: string | null
+          family_id?: string | null
+          family_role?: string | null
+          first_name: string
+          gender?: string | null
+          id?: string
+          interviewed_for_membership?: boolean
+          is_baptized?: boolean
+          last_name: string
+          membership_status?: string
+          middle_name?: string | null
+          ministry?: string | null
+          notes?: string | null
+          phone?: string | null
+          spiritual_maturity?: string | null
+          transferred_at?: string | null
+          transferred_member_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          anniversary_date?: string | null
+          applied_for_membership?: boolean
+          baptism_date?: string | null
+          birth_date?: string | null
+          civil_status?: string | null
+          created_at?: string
+          created_by?: string | null
+          date_joined?: string | null
+          email?: string | null
+          family_id?: string | null
+          family_role?: string | null
+          first_name?: string
+          gender?: string | null
+          id?: string
+          interviewed_for_membership?: boolean
+          is_baptized?: boolean
+          last_name?: string
+          membership_status?: string
+          middle_name?: string | null
+          ministry?: string | null
+          notes?: string | null
+          phone?: string | null
+          spiritual_maturity?: string | null
+          transferred_at?: string | null
+          transferred_member_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "baptismal_candidates_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       church_settings: {
         Row: {
           abbreviation: string
@@ -462,6 +560,10 @@ export type Database = {
         Returns: string[]
       }
       touch_last_login: { Args: never; Returns: undefined }
+      transfer_candidate_to_member: {
+        Args: { _candidate_id: string }
+        Returns: string
+      }
     }
     Enums: {
       app_role:

@@ -9,6 +9,7 @@ import {
   Settings,
   ShieldCheck,
   PartyPopper,
+  Droplets,
   type LucideIcon,
 } from "lucide-react";
 
@@ -34,6 +35,12 @@ export const NAV_SECTIONS: NavSection[] = [
     heading: "Records",
     items: [
       { label: "Members", href: "/dashboard/members", icon: Users, capability: "view_members" },
+      {
+        label: "Baptismal Class Candidates",
+        href: "/dashboard/candidates",
+        icon: Droplets,
+        capability: "view_members",
+      },
       {
         label: "Member Visitations",
         href: "/dashboard/visitation",

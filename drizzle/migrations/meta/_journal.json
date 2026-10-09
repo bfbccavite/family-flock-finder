@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1791536573960,
+      "tag": "0000_baptismal_candidates",
+      "breakpoints": true
+    }
+  ]
+}
