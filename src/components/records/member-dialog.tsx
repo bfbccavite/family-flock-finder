@@ -36,12 +36,16 @@ export function MemberDialog({
   onOpenChange,
   member,
   families,
+  table = "members",
 }: {
+  table?: "members" | "baptismal_candidates";
   open: boolean;
   onOpenChange: (open: boolean) => void;
   member: Member | null;
   families: Family[];
 }) {
+  const isCandidate = table === "baptismal_candidates";
+  const noun = isCandidate ? "candidate" : "member";
   const queryClient = useQueryClient();
   const [status, setStatus] = useState(member?.membership_status ?? "active");
   const [gender, setGender] = useState(member?.gender ?? NONE);
@@ -89,17 +93,17 @@ export function MemberDialog({
       };
 
       if (member) {
-        const { error } = await supabase.from("members").update(payload).eq("id", member.id);
+        const { error } = await supabase.from(table).update(payload).eq("id", member.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from("members").insert(payload);
+        const { error } = await supabase.from(table).insert(payload);
         if (error) throw error;
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["members"] });
+      queryClient.invalidateQueries({ queryKey: [isCandidate ? "baptismal-candidates" : "members"] });
       queryClient.invalidateQueries({ queryKey: ["families"] });
-      toast.success(member ? "Member updated." : "Member added.");
+      toast.success(`${isCandidate ? "Candidate" : "Member"} ${member ? "updated" : "added"}.`);
       setNewFamily("");
       onOpenChange(false);
     },
@@ -110,7 +114,7 @@ export function MemberDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>{member ? "Edit member" : "Add member"}</DialogTitle>
+          <DialogTitle>{member ? `Edit ${noun}` : `Add ${noun}`}</DialogTitle>
           <DialogDescription>
             Personal details, church life information and family grouping.
           </DialogDescription>
