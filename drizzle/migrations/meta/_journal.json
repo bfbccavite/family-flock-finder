@@ -8,6 +8,13 @@
       "when": 1791536573960,
       "tag": "0000_baptismal_candidates",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791538226794,
+      "tag": "0001_candidate_class_completed",
+      "breakpoints": true
     }
   ]
 }

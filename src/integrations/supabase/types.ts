@@ -64,6 +64,7 @@ export type Database = {
           baptism_date: string | null
           birth_date: string | null
           civil_status: string | null
+          class_completed_at: string | null
           created_at: string
           created_by: string | null
           date_joined: string | null
@@ -75,6 +76,7 @@ export type Database = {
           id: string
           interviewed_for_membership: boolean
           is_baptized: boolean
+          is_class_completed: boolean
           last_name: string
           membership_status: string
           middle_name: string | null
@@ -93,6 +95,7 @@ export type Database = {
           baptism_date?: string | null
           birth_date?: string | null
           civil_status?: string | null
+          class_completed_at?: string | null
           created_at?: string
           created_by?: string | null
           date_joined?: string | null
@@ -104,6 +107,7 @@ export type Database = {
           id?: string
           interviewed_for_membership?: boolean
           is_baptized?: boolean
+          is_class_completed?: boolean
           last_name: string
           membership_status?: string
           middle_name?: string | null
@@ -122,6 +126,7 @@ export type Database = {
           baptism_date?: string | null
           birth_date?: string | null
           civil_status?: string | null
+          class_completed_at?: string | null
           created_at?: string
           created_by?: string | null
           date_joined?: string | null
@@ -133,6 +138,7 @@ export type Database = {
           id?: string
           interviewed_for_membership?: boolean
           is_baptized?: boolean
+          is_class_completed?: boolean
           last_name?: string
           membership_status?: string
           middle_name?: string | null

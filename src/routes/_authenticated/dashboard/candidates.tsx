@@ -2,7 +2,8 @@ import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { GraduationCap, Pencil, Plus, Search, Trash2, Droplets } from "lucide-react";
+import { Check, GraduationCap, Pencil, Plus, Search, Trash2, Droplets } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { can } from "@/lib/roles";
 import { memberName, useFamilies, useStaffProfile, type Member } from "@/lib/church-data";
@@ -38,6 +39,8 @@ export const Route = createFileRoute("/_authenticated/dashboard/candidates")({
 
 type Candidate = Member & {
   is_baptized: boolean;
+  is_class_completed: boolean;
+  class_completed_at: string | null;
   applied_for_membership: boolean;
   interviewed_for_membership: boolean;
   transferred_at: string | null;
@@ -82,6 +85,22 @@ function CandidatesPage() {
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["baptismal-candidates"] }),
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const classToggle = useMutation({
+    mutationFn: async ({ id, value }: { id: string; value: boolean }) => {
+      const { error } = await supabase
+        .from("baptismal_candidates")
+        .update({ is_class_completed: value, class_completed_at: value ? new Date().toISOString() : null })
+        .eq("id", id);
+      if (error) throw error;
+      return value;
+    },
+    onSuccess: (value) => {
+      qc.invalidateQueries({ queryKey: ["baptismal-candidates"] });
+      toast.success(value ? "Candidate marked as class completed" : "Candidate marked as class pending");
+    },
     onError: (e: Error) => toast.error(e.message),
   });
 
@@ -198,7 +217,27 @@ function CandidatesPage() {
                     )}
                   </div>
 
+                  <div>
+                    {c.is_class_completed ? (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
+                        <Check className="h-3.5 w-3.5" /> Baptismal Class Completed
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+                        Class Pending
+                      </span>
+                    )}
+                  </div>
+
                   <div className="flex flex-col gap-2">
+                    <label className="flex items-center justify-between gap-2 rounded-md border p-2 text-sm font-medium">
+                      Mark Baptismal Class as Completed
+                      <Switch
+                        checked={c.is_class_completed}
+                        disabled={!canManage || !!c.transferred_at || classToggle.isPending}
+                        onCheckedChange={(v) => classToggle.mutate({ id: c.id, value: v })}
+                      />
+                    </label>
                     {STEPS.map((s) => (
                       <label key={s.key} className="flex items-center gap-2 text-sm">
                         <Checkbox
