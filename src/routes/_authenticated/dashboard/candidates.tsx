@@ -78,7 +78,7 @@ function CandidatesPage() {
 
   const toggle = useMutation({
     mutationFn: async ({ id, key, value }: { id: string; key: StepKey; value: boolean }) => {
-      const { error } = await supabase.from("baptismal_candidates").update({ [key]: value }).eq("id", id);
+      const { error } = await supabase.from("baptismal_candidates").update({ [key]: value } as Record<StepKey, boolean>).eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["baptismal-candidates"] }),
