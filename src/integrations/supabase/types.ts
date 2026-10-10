@@ -160,6 +160,110 @@ export type Database = {
           },
         ]
       }
+      bible_study_participants: {
+        Row: {
+          address: string | null
+          anniversary_date: string | null
+          birth_date: string | null
+          civil_status: string | null
+          created_at: string
+          created_by: string | null
+          email: string | null
+          first_name: string
+          gender: string | null
+          id: string
+          last_name: string
+          middle_name: string | null
+          notes: string | null
+          phone: string | null
+          promoted_at: string | null
+          promoted_candidate_id: string | null
+          religion: string | null
+          sessions_attended: number[]
+          start_date: string
+          updated_at: string
+          visitor_id: string | null
+        }
+        Insert: {
+          address?: string | null
+          anniversary_date?: string | null
+          birth_date?: string | null
+          civil_status?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          first_name: string
+          gender?: string | null
+          id?: string
+          last_name: string
+          middle_name?: string | null
+          notes?: string | null
+          phone?: string | null
+          promoted_at?: string | null
+          promoted_candidate_id?: string | null
+          religion?: string | null
+          sessions_attended?: number[]
+          start_date?: string
+          updated_at?: string
+          visitor_id?: string | null
+        }
+        Update: {
+          address?: string | null
+          anniversary_date?: string | null
+          birth_date?: string | null
+          civil_status?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          first_name?: string
+          gender?: string | null
+          id?: string
+          last_name?: string
+          middle_name?: string | null
+          notes?: string | null
+          phone?: string | null
+          promoted_at?: string | null
+          promoted_candidate_id?: string | null
+          religion?: string | null
+          sessions_attended?: number[]
+          start_date?: string
+          updated_at?: string
+          visitor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_study_participants_visitor_id_fkey"
+            columns: ["visitor_id"]
+            isOneToOne: false
+            referencedRelation: "first_time_visitors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bible_study_settings: {
+        Row: {
+          id: number
+          min_tenure_months: number
+          required_sessions: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          id?: number
+          min_tenure_months?: number
+          required_sessions?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          id?: number
+          min_tenure_months?: number
+          required_sessions?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       church_settings: {
         Row: {
           abbreviation: string
@@ -561,6 +665,10 @@ export type Database = {
         Returns: boolean
       }
       is_active_staff: { Args: { _user_id: string }; Returns: boolean }
+      promote_participant_to_candidate: {
+        Args: { _participant_id: string }
+        Returns: string
+      }
       role_capabilities: {
         Args: { _role: Database["public"]["Enums"]["app_role"] }
         Returns: string[]

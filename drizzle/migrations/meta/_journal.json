@@ -15,6 +15,13 @@
       "when": 1791538226794,
       "tag": "0001_candidate_class_completed",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791649833187,
+      "tag": "0002_bible_study_and_rules",
+      "breakpoints": true
     }
   ]
 }
