@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { clearSessionOnPageLoad } from "@/lib/session-reset";
 
 function NotFoundComponent() {
   return (
@@ -74,6 +75,9 @@ function ErrorComponent({ error, reset }: import("@tanstack/react-router").Error
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  beforeLoad: async () => {
+    await clearSessionOnPageLoad();
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
