@@ -39,7 +39,8 @@ export type Capability =
   | "view_visitation"
   | "manage_visitors"
   | "view_visitors"
-  | "view_reports";
+  | "view_reports"
+  | "manage_bible_study_rules";
 
 export const ROLE_CAPABILITIES: Record<Role, Capability[]> = {
   super_admin: [
@@ -54,8 +55,7 @@ export const ROLE_CAPABILITIES: Record<Role, Capability[]> = {
     "view_visitation",
     "manage_visitors",
     "view_visitors",
-    "view_reports",
-  ],
+    "view_reports", "manage_bible_study_rules"],
   secretary: [
     "manage_members",
     "view_members",
@@ -64,8 +64,7 @@ export const ROLE_CAPABILITIES: Record<Role, Capability[]> = {
     "view_visitation",
     "manage_visitors",
     "view_visitors",
-    "view_reports",
-  ],
+    "view_reports", "manage_bible_study_rules"],
   assistant_secretary: [
     "manage_members",
     "view_members",
@@ -73,11 +72,10 @@ export const ROLE_CAPABILITIES: Record<Role, Capability[]> = {
     "view_attendance",
     "manage_visitors",
     "view_visitors",
-    "view_reports",
-  ],
+    "view_reports", "manage_bible_study_rules"],
   ushering: ["manage_attendance", "view_attendance", "manage_visitors", "view_visitors"],
   visitation: ["view_members", "manage_visitation", "view_visitation", "view_visitors"],
-  pastor_elder: ["view_members", "view_attendance", "view_visitation", "view_visitors", "view_reports"],
+  pastor_elder: ["view_members", "view_attendance", "view_visitation", "view_visitors", "view_reports", "manage_bible_study_rules"],
 };
 
 export function can(role: Role | null | undefined, capability: Capability): boolean {
