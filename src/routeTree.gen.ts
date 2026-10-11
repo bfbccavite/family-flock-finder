@@ -17,6 +17,7 @@ import { Route as InactiveRouteImport } from './routes/inactive'
 import { Route as SetupRouteImport } from './routes/setup'
 import { Route as AuthenticatedDashboardRouteRouteImport } from './routes/_authenticated/dashboard/route'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
+import { Route as AuthenticatedDashboardBibleStudyRouteImport } from './routes/_authenticated/dashboard/bible-study'
 import { Route as AuthenticatedDashboardCandidatesRouteImport } from './routes/_authenticated/dashboard/candidates'
 import { Route as AuthenticatedDashboardCelebrationsRouteImport } from './routes/_authenticated/dashboard/celebrations'
 import { Route as AuthenticatedDashboardMembersRouteImport } from './routes/_authenticated/dashboard/members'
@@ -66,6 +67,12 @@ const AuthenticatedDashboardIndexRoute =
   AuthenticatedDashboardIndexRouteImport.update({
     id: '/',
     path: '/',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
+const AuthenticatedDashboardBibleStudyRoute =
+  AuthenticatedDashboardBibleStudyRouteImport.update({
+    id: '/bible-study',
+    path: '/bible-study',
     getParentRoute: () => AuthenticatedDashboardRouteRoute,
   } as any)
 const AuthenticatedDashboardCandidatesRoute =
@@ -130,6 +137,7 @@ export interface FileRoutesByFullPath {
   '/inactive': typeof InactiveRoute
   '/setup': typeof SetupRoute
   '/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
+  '/dashboard/bible-study': typeof AuthenticatedDashboardBibleStudyRoute
   '/dashboard/candidates': typeof AuthenticatedDashboardCandidatesRoute
   '/dashboard/celebrations': typeof AuthenticatedDashboardCelebrationsRoute
   '/dashboard/members': typeof AuthenticatedDashboardMembersRoute
@@ -147,6 +155,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/inactive': typeof InactiveRoute
   '/setup': typeof SetupRoute
+  '/dashboard/bible-study': typeof AuthenticatedDashboardBibleStudyRoute
   '/dashboard/candidates': typeof AuthenticatedDashboardCandidatesRoute
   '/dashboard/celebrations': typeof AuthenticatedDashboardCelebrationsRoute
   '/dashboard/members': typeof AuthenticatedDashboardMembersRoute
@@ -167,6 +176,7 @@ export interface FileRoutesById {
   '/inactive': typeof InactiveRoute
   '/setup': typeof SetupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
+  '/_authenticated/dashboard/bible-study': typeof AuthenticatedDashboardBibleStudyRoute
   '/_authenticated/dashboard/candidates': typeof AuthenticatedDashboardCandidatesRoute
   '/_authenticated/dashboard/celebrations': typeof AuthenticatedDashboardCelebrationsRoute
   '/_authenticated/dashboard/members': typeof AuthenticatedDashboardMembersRoute
@@ -187,6 +197,7 @@ export interface FileRouteTypes {
     | '/inactive'
     | '/setup'
     | '/dashboard'
+    | '/dashboard/bible-study'
     | '/dashboard/candidates'
     | '/dashboard/celebrations'
     | '/dashboard/members'
@@ -204,6 +215,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/inactive'
     | '/setup'
+    | '/dashboard/bible-study'
     | '/dashboard/candidates'
     | '/dashboard/celebrations'
     | '/dashboard/members'
@@ -223,6 +235,7 @@ export interface FileRouteTypes {
     | '/inactive'
     | '/setup'
     | '/_authenticated/dashboard'
+    | '/_authenticated/dashboard/bible-study'
     | '/_authenticated/dashboard/candidates'
     | '/_authenticated/dashboard/celebrations'
     | '/_authenticated/dashboard/members'
@@ -302,6 +315,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
       parentRoute: typeof AuthenticatedDashboardRouteRoute
     }
+    '/_authenticated/dashboard/bible-study': {
+      id: '/_authenticated/dashboard/bible-study'
+      path: '/bible-study'
+      fullPath: '/dashboard/bible-study'
+      preLoaderRoute: typeof AuthenticatedDashboardBibleStudyRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
     '/_authenticated/dashboard/candidates': {
       id: '/_authenticated/dashboard/candidates'
       path: '/candidates'
@@ -369,6 +389,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedDashboardRouteRouteChildren {
+  AuthenticatedDashboardBibleStudyRoute: typeof AuthenticatedDashboardBibleStudyRoute
   AuthenticatedDashboardCandidatesRoute: typeof AuthenticatedDashboardCandidatesRoute
   AuthenticatedDashboardCelebrationsRoute: typeof AuthenticatedDashboardCelebrationsRoute
   AuthenticatedDashboardMembersRoute: typeof AuthenticatedDashboardMembersRoute
@@ -383,6 +404,8 @@ interface AuthenticatedDashboardRouteRouteChildren {
 
 const AuthenticatedDashboardRouteRouteChildren: AuthenticatedDashboardRouteRouteChildren =
   {
+    AuthenticatedDashboardBibleStudyRoute:
+      AuthenticatedDashboardBibleStudyRoute,
     AuthenticatedDashboardCandidatesRoute:
       AuthenticatedDashboardCandidatesRoute,
     AuthenticatedDashboardCelebrationsRoute:
