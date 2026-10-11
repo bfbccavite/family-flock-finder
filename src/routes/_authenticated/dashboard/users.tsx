@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ROLES, ROLE_LABELS, can, roleLabel, type Role } from "@/lib/roles";
 import { useStaffProfile } from "@/lib/church-data";
 import { createStaffAccount } from "@/lib/staff.functions";
+import { SECURITY_QUESTIONS } from "@/lib/account.functions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -93,6 +94,8 @@ function UsersPage() {
           password: String(form.get("password") ?? ""),
           phone: String(form.get("phone") ?? ""),
           role: newRole,
+          security_question: (String(form.get("security_question") ?? "") || undefined) as (typeof SECURITY_QUESTIONS)[number] | undefined,
+          secret_answer: String(form.get("secret_answer") ?? "").trim() || undefined,
         },
       });
     },
@@ -268,6 +271,17 @@ function UsersPage() {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="security_question">Security question (optional)</Label>
+              <select id="security_question" name="security_question" defaultValue="" className="h-10 rounded-md border border-input bg-background px-3 text-sm">
+                <option value="">— None for now —</option>
+                {SECURITY_QUESTIONS.map((q) => <option key={q} value={q}>{q}</option>)}
+              </select>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="secret_answer">Secret answer (optional)</Label>
+              <Input id="secret_answer" name="secret_answer" autoComplete="off" />
             </div>
           </form>
           <DialogFooter>
