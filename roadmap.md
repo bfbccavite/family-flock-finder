@@ -11,3 +11,11 @@
 - [ ] Add member age, gender, maturity-stage, and membership-status analytics
 - [ ] Add member and visitor anniversary dates plus a unified Celebrations page
 - [ ] Add one-week advance birthday and anniversary notifications
+- [ ] Bible Study page: attendance checklist, eligibility rules, promote to Baptismal Class
+- [ ] Print/PDF reports with filters (members by status, candidates by batch, others by month/quarter/year)
+- [ ] Import tool (CSV) + import attached masterlist and birthdays/anniversaries PDFs
+- [ ] Daily Devotion popup on dashboard (Manila midnight rotation)
+- [ ] Staff account form: optional security question + answer fields
+- [ ] Verify visitor follow-up fields (needs met, contacted by, result) save
+- [ ] Dashboard banner 7 days before birthdays/anniversaries
+- [ ] AI outreach recommendations for visitors
