@@ -240,3 +240,87 @@ export function useVisitorFollowUpActivities() {
     },
   });
 }
+
+export type BibleStudyParticipant = {
+  id: string;
+  visitor_id: string | null;
+  first_name: string;
+  middle_name: string | null;
+  last_name: string;
+  gender: string | null;
+  birth_date: string | null;
+  civil_status: string | null;
+  phone: string | null;
+  email: string | null;
+  address: string | null;
+  religion: string | null;
+  anniversary_date: string | null;
+  notes: string | null;
+  start_date: string;
+  sessions_attended: number[];
+  promoted_at: string | null;
+  promoted_candidate_id: string | null;
+  created_at: string;
+};
+
+export type BibleStudySettings = { required_sessions: number; min_tenure_months: number };
+
+export function useBibleStudyParticipants() {
+  return useQuery({
+    queryKey: ["bible-study"],
+    queryFn: async (): Promise<BibleStudyParticipant[]> => {
+      const { data, error } = await supabase
+        .from("bible_study_participants")
+        .select("*")
+        .order("start_date", { ascending: false });
+      if (error) throw error;
+      return data as BibleStudyParticipant[];
+    },
+  });
+}
+
+export function useBibleStudySettings() {
+  return useQuery({
+    queryKey: ["bible-study-settings"],
+    queryFn: async (): Promise<BibleStudySettings> => {
+      const { data } = await supabase
+        .from("bible_study_settings")
+        .select("required_sessions, min_tenure_months")
+        .eq("id", 1)
+        .maybeSingle();
+      return data ?? { required_sessions: 12, min_tenure_months: 3 };
+    },
+  });
+}
+
+/** Months between start date and today (whole months). */
+export function monthsSince(date: string) {
+  const s = new Date(`${date}T00:00:00`);
+  const n = new Date();
+  let m = (n.getFullYear() - s.getFullYear()) * 12 + n.getMonth() - s.getMonth();
+  if (n.getDate() < s.getDate()) m--;
+  return Math.max(0, m);
+}
+
+export function isEligible(p: Pick<BibleStudyParticipant, "sessions_attended" | "start_date">, s: BibleStudySettings) {
+  return p.sessions_attended.length >= s.required_sessions && monthsSince(p.start_date) >= s.min_tenure_months;
+}
+
+/** Batch label from a date, e.g. "2026 Q3". */
+export function batchOf(date: string | null | undefined) {
+  if (!date) return "No batch";
+  const m = Number(date.slice(5, 7));
+  return `${date.slice(0, 4)} Q${Math.ceil(m / 3)}`;
+}
+
+/** Birth/anniversary dates imported without a year are stored with year 1904. */
+export function hasRealYear(date: string | null | undefined) {
+  return !!date && Number(date.slice(0, 4)) >= 1910;
+}
+
+/** Split "Juan Dela Cruz" into first and last name (last word = last name). */
+export function splitFullName(full: string) {
+  const parts = full.trim().split(/\s+/);
+  if (parts.length === 1) return { first_name: parts[0] ?? "", last_name: "" };
+  return { first_name: parts.slice(0, -1).join(" "), last_name: parts[parts.length - 1]! };
+}

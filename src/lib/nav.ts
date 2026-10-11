@@ -10,6 +10,9 @@ import {
   ShieldCheck,
   PartyPopper,
   Droplets,
+  BookOpen,
+  Printer,
+  FileUp,
   type LucideIcon,
 } from "lucide-react";
 
@@ -54,6 +57,12 @@ export const NAV_SECTIONS: NavSection[] = [
         capability: "view_visitors",
       },
       {
+        label: "Bible Study",
+        href: "/dashboard/bible-study",
+        icon: BookOpen,
+        capability: "view_visitors",
+      },
+      {
         label: "Attendance",
         href: "/dashboard/attendance",
         icon: ClipboardList,
@@ -66,6 +75,7 @@ export const NAV_SECTIONS: NavSection[] = [
         icon: BarChart3,
         capability: "view_visitors",
       },
+      { label: "Print Reports", href: "/dashboard/print", icon: Printer, capability: "view_reports" },
       { label: "Celebrations", href: "/dashboard/celebrations", icon: PartyPopper, capability: "view_members" },
     ],
   },
@@ -73,6 +83,7 @@ export const NAV_SECTIONS: NavSection[] = [
     heading: "Administration",
     items: [
       { label: "Staff Accounts", href: "/dashboard/users", icon: ShieldCheck, capability: "manage_users" },
+      { label: "Import Data", href: "/dashboard/import", icon: FileUp, capability: "manage_members" },
       { label: "Settings", href: "/dashboard/settings", icon: Settings, capability: "manage_settings" },
     ],
   },

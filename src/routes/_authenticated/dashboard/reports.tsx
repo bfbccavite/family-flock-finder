@@ -51,7 +51,7 @@ function discoveryLabels(v: FirstTimeVisitor) {
 }
 
 function ageOf(birth: string | null) {
-  if (!birth) return null;
+  if (!birth || Number(birth.slice(0, 4)) < 1910) return null;
   const b = new Date(`${birth}T00:00:00`);
   const n = new Date();
   let a = n.getFullYear() - b.getFullYear();
