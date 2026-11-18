@@ -18,5 +18,5 @@
 - [ ] Staff account form: optional security question + answer fields
 - [ ] Verify visitor follow-up fields (needs met, contacted by, result) save
 - [ ] Dashboard banner 7 days before birthdays/anniversaries
-- [ ] AI outreach recommendations for visitors
-- [ ] Add authenticated AI Gateway recommendations from visitor intake and follow-up notes
+- [x] AI outreach recommendations for visitors
+- [x] Add authenticated AI Gateway recommendations from visitor intake and follow-up notes
