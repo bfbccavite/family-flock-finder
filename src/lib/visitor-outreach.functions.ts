@@ -67,8 +67,8 @@ export const generateVisitorOutreachRecommendation = createServerFn({ method: "P
     const discovery: string[] = [];
     if (visitor.found_facebook) discovery.push("Facebook / Social Media");
     if (visitor.found_google) discovery.push("Google / Google Maps");
-    if (visitor.referred_by) discovery.push(`Referred by ${visitor.referred_by.slice(0, 120)}`);
-    if (visitor.companion_of) discovery.push(`Came with ${visitor.companion_of.slice(0, 120)}`);
+    if (visitor.referred_by) discovery.push("Referred by someone");
+    if (visitor.companion_of) discovery.push("Came with a companion");
     if (visitor.discovery_other) discovery.push(visitor.discovery_other.slice(0, 300));
     if (discovery.length === 0 && visitor.discovery_source)
       discovery.push(visitor.discovery_source.slice(0, 300));
@@ -126,7 +126,6 @@ export const generateVisitorOutreachRecommendation = createServerFn({ method: "P
       if (!recommendation) throw new Error("No suggestions were returned. Please try again.");
       return { recommendation };
     } catch (error) {
-      const { GatewayError } = await import("@lovable.dev/ai-gateway");
       if (error instanceof GatewayError) {
         console.error("Visitor outreach recommendation failed", {
           code: error.code,

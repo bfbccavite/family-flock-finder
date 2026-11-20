@@ -1,25 +1,26 @@
-import { createClient } from '@supabase/supabase-js'
-import { createAPIFileRoute } from '@tanstack/start/api'
+import { createClient } from "@supabase/supabase-js";
+import { createFileRoute } from "@tanstack/react-router";
 
-export default createAPIFileRoute('/api/cron')({
-  GET: async ({ request }) => {
-    const supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_ANON_KEY!
-    )
+export const Route = createFileRoute("/api/cron")({
+  server: {
+    handlers: {
+      GET: async () => {
+        const supabase = createClient(
+          import.meta.env["VITE_SUPABASE_URL"],
+          import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"],
+          { auth: { persistSession: false, autoRefreshToken: false } },
+        );
+        const { error } = await supabase.auth.getSession();
 
-    const { error } = await supabase.auth.getSession()
+        if (error) {
+          return Response.json({ success: false, error: error.message }, { status: 500 });
+        }
 
-    if (error) {
-      return new Response(JSON.stringify({ success: false, error: error.message }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      })
-    }
-
-    return new Response(JSON.stringify({ success: true, message: "Supabase database is wide awake!" }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    })
+        return Response.json({
+          success: true,
+          message: "The BFBC application is responding.",
+        });
+      },
+    },
   },
-})
+});

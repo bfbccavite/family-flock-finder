@@ -16,6 +16,7 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as InactiveRouteImport } from './routes/inactive'
 import { Route as SetupRouteImport } from './routes/setup'
 import { Route as AuthenticatedDashboardRouteRouteImport } from './routes/_authenticated/dashboard/route'
+import { Route as ApiCronRouteImport } from './routes/api.cron'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as AuthenticatedDashboardBibleStudyRouteImport } from './routes/_authenticated/dashboard/bible-study'
 import { Route as AuthenticatedDashboardCandidatesRouteImport } from './routes/_authenticated/dashboard/candidates'
@@ -63,6 +64,11 @@ const AuthenticatedDashboardRouteRoute =
     path: '/dashboard',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiCronRoute = ApiCronRouteImport.update({
+  id: '/api/cron',
+  path: '/api/cron',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedDashboardIndexRoute =
   AuthenticatedDashboardIndexRouteImport.update({
     id: '/',
@@ -137,6 +143,7 @@ export interface FileRoutesByFullPath {
   '/inactive': typeof InactiveRoute
   '/setup': typeof SetupRoute
   '/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
+  '/api/cron': typeof ApiCronRoute
   '/dashboard/bible-study': typeof AuthenticatedDashboardBibleStudyRoute
   '/dashboard/candidates': typeof AuthenticatedDashboardCandidatesRoute
   '/dashboard/celebrations': typeof AuthenticatedDashboardCelebrationsRoute
@@ -155,6 +162,7 @@ export interface FileRoutesByTo {
   '/forgot-password': typeof ForgotPasswordRoute
   '/inactive': typeof InactiveRoute
   '/setup': typeof SetupRoute
+  '/api/cron': typeof ApiCronRoute
   '/dashboard/bible-study': typeof AuthenticatedDashboardBibleStudyRoute
   '/dashboard/candidates': typeof AuthenticatedDashboardCandidatesRoute
   '/dashboard/celebrations': typeof AuthenticatedDashboardCelebrationsRoute
@@ -176,6 +184,7 @@ export interface FileRoutesById {
   '/inactive': typeof InactiveRoute
   '/setup': typeof SetupRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
+  '/api/cron': typeof ApiCronRoute
   '/_authenticated/dashboard/bible-study': typeof AuthenticatedDashboardBibleStudyRoute
   '/_authenticated/dashboard/candidates': typeof AuthenticatedDashboardCandidatesRoute
   '/_authenticated/dashboard/celebrations': typeof AuthenticatedDashboardCelebrationsRoute
@@ -197,6 +206,7 @@ export interface FileRouteTypes {
     | '/inactive'
     | '/setup'
     | '/dashboard'
+    | '/api/cron'
     | '/dashboard/bible-study'
     | '/dashboard/candidates'
     | '/dashboard/celebrations'
@@ -215,6 +225,7 @@ export interface FileRouteTypes {
     | '/forgot-password'
     | '/inactive'
     | '/setup'
+    | '/api/cron'
     | '/dashboard/bible-study'
     | '/dashboard/candidates'
     | '/dashboard/celebrations'
@@ -235,6 +246,7 @@ export interface FileRouteTypes {
     | '/inactive'
     | '/setup'
     | '/_authenticated/dashboard'
+    | '/api/cron'
     | '/_authenticated/dashboard/bible-study'
     | '/_authenticated/dashboard/candidates'
     | '/_authenticated/dashboard/celebrations'
@@ -255,6 +267,7 @@ export interface RootRouteChildren {
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   InactiveRoute: typeof InactiveRoute
   SetupRoute: typeof SetupRoute
+  ApiCronRoute: typeof ApiCronRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -307,6 +320,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/cron': {
+      id: '/api/cron'
+      path: '/api/cron'
+      fullPath: '/api/cron'
+      preLoaderRoute: typeof ApiCronRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/dashboard/': {
       id: '/_authenticated/dashboard/'
@@ -445,6 +465,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordRoute: ForgotPasswordRoute,
   InactiveRoute: InactiveRoute,
   SetupRoute: SetupRoute,
+  ApiCronRoute: ApiCronRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

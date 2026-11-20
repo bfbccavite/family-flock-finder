@@ -220,7 +220,14 @@ function FollowUpRow({ visitor, editable }: { visitor: FirstTimeVisitor; editabl
         )}
       </TableCell>
       <TableCell>
-        <VisitorOutreachRecommendations visitor={visitor} />
+        <VisitorOutreachRecommendations
+          visitor={visitor}
+          followUp={{
+            spiritualNeedsMet: met,
+            contactedBy: contact === "Others" ? otherName : contact,
+            result,
+          }}
+        />
       </TableCell>
     </TableRow>
   );
@@ -263,7 +270,7 @@ function VisitorReportsPage() {
     const gender: Record<string, number> = { Male: 0, Female: 0, "Not specified": 0 };
     people.forEach((p) => {
       const a = ageOf(p.birth);
-      (age as any)[
+      const ageGroup =
         a === null
           ? "Unknown"
           : a <= 11
@@ -272,10 +279,11 @@ function VisitorReportsPage() {
               ? "Youth (12-20)"
               : a <= 59
                 ? "Adult (21-59)"
-                : "Senior (60+)"
-      ]++;
+                : "Senior (60+)";
+      age[ageGroup] = (age[ageGroup] ?? 0) + 1;
       const g = (p.gender ?? "").toLowerCase();
-      (gender as any)[g === "male" ? "Male" : g === "female" ? "Female" : "Not specified"]++;
+      const genderGroup = g === "male" ? "Male" : g === "female" ? "Female" : "Not specified";
+      gender[genderGroup] = (gender[genderGroup] ?? 0) + 1;
     });
     const status = MEMBERSHIP_STATUSES.map(
       (s) =>
